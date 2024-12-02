@@ -1,9 +1,8 @@
 package com.dev.fellipe.anime_service.controller;
 
+import com.dev.fellipe.anime_service.domain.Anime;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,8 +12,24 @@ import java.util.List;
 public class AnimeController {
 
     @GetMapping()
-    public List<String> listAll() {
-        log.info(Thread.currentThread().getName());
-        return List.of("Naruto", "Hajime no Ippo");
+    public List<Anime> listAll(@RequestParam(required = false) String name) {
+        var anime = Anime.getAnime();
+
+        if (name != null) {
+            return anime.stream().filter(animes -> animes.getName().equalsIgnoreCase(name)).toList();
+        }
+
+        return anime;
     }
+
+
+    @GetMapping("{id}")
+    public Anime findById(@PathVariable Long id) {
+        return Anime.getAnime()
+                .stream().filter(animes -> animes.getId().equals(id))
+                .findFirst().orElse(null);
+
+    }
+
+
 }
