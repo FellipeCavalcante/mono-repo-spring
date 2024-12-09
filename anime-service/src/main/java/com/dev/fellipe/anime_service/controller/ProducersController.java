@@ -1,7 +1,8 @@
 package com.dev.fellipe.anime_service.controller;
 
-import com.dev.fellipe.anime_service.domain.Anime;
 import com.dev.fellipe.anime_service.domain.Producer;
+import com.dev.fellipe.anime_service.request.ProducerPostRequest;
+import com.dev.fellipe.anime_service.response.ProducerGetResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -39,15 +41,22 @@ public class ProducersController {
 
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Producer> save(@RequestBody Producer producer, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         log.info("Headers received: {}", headers);
-        producer.setId(ThreadLocalRandom.current().nextLong(100_000));
+        var producer = Producer.builder()
+                .id(ThreadLocalRandom.current().nextLong(100_000))
+                .name(producerPostRequest.getName())
+                .createdAt(LocalDateTime.now())
+                .build();
+
         Producer.getProducers().add(producer);
 
-        var responseHearders = new HttpHeaders();
-        responseHearders.setContentType(MediaType.APPLICATION_JSON);
-        responseHearders.add("Authorization", "My key");
+        ProducerGetResponse response = ProducerGetResponse.builder()
+                .id(producer.getId())
+                .name(producer.getName())
+                .createdAt(LocalDateTime.now())
+                .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(producer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
