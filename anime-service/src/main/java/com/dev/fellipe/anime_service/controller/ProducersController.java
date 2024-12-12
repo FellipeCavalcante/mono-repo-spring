@@ -1,6 +1,7 @@
 package com.dev.fellipe.anime_service.controller;
 
 import com.dev.fellipe.anime_service.domain.Producer;
+import com.dev.fellipe.anime_service.mapper.ProducerMapper;
 import com.dev.fellipe.anime_service.request.ProducerPostRequest;
 import com.dev.fellipe.anime_service.response.ProducerGetResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequestMapping("v1/producers")
 @Slf4j
 public class ProducersController {
+
+    private static final ProducerMapper MAPPER = ProducerMapper.INSTACE;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Producer> listAll(@RequestParam(required = false) String name) {
@@ -43,19 +46,10 @@ public class ProducersController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProducerGetResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         log.info("Headers received: {}", headers);
-        var producer = Producer.builder()
-                .id(ThreadLocalRandom.current().nextLong(100_000))
-                .name(producerPostRequest.getName())
-                .createdAt(LocalDateTime.now())
-                .build();
+        var producer = MAPPER.toProducer(producerPostRequest);
+        var response = MAPPER.toProducerGetResponse(producer);
 
         Producer.getProducers().add(producer);
-
-        ProducerGetResponse response = ProducerGetResponse.builder()
-                .id(producer.getId())
-                .name(producer.getName())
-                .createdAt(LocalDateTime.now())
-                .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
