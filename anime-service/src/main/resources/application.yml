@@ -5,6 +5,10 @@ spring:
     virtual:
       enabled: true
 
+logging:
+  level:
+    com.dev.fellipe.anime_service: debug
+
 server:
   servlet:
     context-path: /
