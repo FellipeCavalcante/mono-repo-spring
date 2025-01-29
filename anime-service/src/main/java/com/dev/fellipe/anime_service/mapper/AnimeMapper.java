@@ -2,6 +2,7 @@ package com.dev.fellipe.anime_service.mapper;
 
 import com.dev.fellipe.anime_service.domain.Anime;
 import com.dev.fellipe.anime_service.request.AnimePostRequest;
+import com.dev.fellipe.anime_service.request.AnimePutRequest;
 import com.dev.fellipe.anime_service.response.AnimeGetResponse;
 import com.dev.fellipe.anime_service.response.AnimePostResponse;
 import org.mapstruct.Mapper;
@@ -17,9 +18,12 @@ public interface AnimeMapper {
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
     Anime toAnime(AnimePostRequest postRequest);
 
+    Anime toAnime(AnimePutRequest request);
+
     AnimePostResponse toAnimePostResponse(Anime anime);
 
     AnimeGetResponse toAnimeGetResponse(Anime anime);
 
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
+
 }

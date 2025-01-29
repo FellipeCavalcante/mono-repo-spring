@@ -3,6 +3,7 @@ package com.dev.fellipe.anime_service.controller;
 import com.dev.fellipe.anime_service.domain.Anime;
 import com.dev.fellipe.anime_service.mapper.AnimeMapper;
 import com.dev.fellipe.anime_service.request.AnimePostRequest;
+import com.dev.fellipe.anime_service.request.AnimePutRequest;
 import com.dev.fellipe.anime_service.response.AnimeGetResponse;
 import com.dev.fellipe.anime_service.response.AnimePostResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController()
 @RequestMapping("v1/animes")
@@ -73,6 +73,22 @@ public class AnimeController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
 
         Anime.getAnimes().remove(animeToDelete);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+        log.debug("Request to update anime {}", request);
+
+        var animeToRemove =  Anime.getAnimes()
+                .stream().filter(animes -> animes.getId().equals(request.getId()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+
+        var animeUpdated =  MAPPER.toAnime(request);
+        Anime.getAnimes().remove(animeToRemove);
+        Anime.getAnimes().add(animeUpdated);
 
         return ResponseEntity.noContent().build();
     }
