@@ -2,11 +2,13 @@ package com.dev.fellipe.anime_service.mapper;
 
 import com.dev.fellipe.anime_service.domain.Producer;
 import com.dev.fellipe.anime_service.request.ProducerPostRequest;
+import com.dev.fellipe.anime_service.request.ProducerPutRequest;
 import com.dev.fellipe.anime_service.response.ProducerGetResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -17,7 +19,10 @@ public interface ProducerMapper {
     @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
     Producer toProducer(ProducerPostRequest postRequest);
 
+    Producer toProducer(ProducerPutRequest request, LocalDateTime createdAt);
+
     ProducerGetResponse toProducerGetResponse(Producer producer);
 
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
+
 }

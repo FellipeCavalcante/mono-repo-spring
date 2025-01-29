@@ -3,6 +3,7 @@ package com.dev.fellipe.anime_service.controller;
 import com.dev.fellipe.anime_service.domain.Producer;
 import com.dev.fellipe.anime_service.mapper.ProducerMapper;
 import com.dev.fellipe.anime_service.request.ProducerPostRequest;
+import com.dev.fellipe.anime_service.request.ProducerPutRequest;
 import com.dev.fellipe.anime_service.response.ProducerGetResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +72,22 @@ public class ProducersController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found"));
 
         Producer.getProducers().remove(producerToDelete);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
+        log.debug("Request to update producer {}", request);
+
+        var producerToRemove = Producer.getProducers()
+                .stream().filter(producers -> producers.getId().equals(request.getId()))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found"));
+
+        var producerUpdated = MAPPER.toProducer(request, producerToRemove.getCreatedAt());
+        Producer.getProducers().remove(producerToRemove);
+        Producer.getProducers().add(producerUpdated);
 
         return ResponseEntity.noContent().build();
     }
