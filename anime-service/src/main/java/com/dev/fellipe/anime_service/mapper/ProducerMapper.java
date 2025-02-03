@@ -4,6 +4,7 @@ import com.dev.fellipe.anime_service.domain.Producer;
 import com.dev.fellipe.anime_service.request.ProducerPostRequest;
 import com.dev.fellipe.anime_service.request.ProducerPutRequest;
 import com.dev.fellipe.anime_service.response.ProducerGetResponse;
+import com.dev.fellipe.anime_service.response.ProducerPostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,6 +22,8 @@ public interface ProducerMapper {
     Producer toProducer(ProducerPutRequest request);
 
     ProducerGetResponse toProducerGetResponse(Producer producer);
+
+    ProducerPostResponse toProducerPostResponse(Producer producer);
 
     List<ProducerGetResponse> toProducerGetResponseList(List<Producer> producers);
 
