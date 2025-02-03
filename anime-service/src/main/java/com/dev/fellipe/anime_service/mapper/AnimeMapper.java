@@ -7,11 +7,12 @@ import com.dev.fellipe.anime_service.response.AnimeGetResponse;
 import com.dev.fellipe.anime_service.response.AnimePostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AnimeMapper {
     AnimeMapper INSTACE = Mappers.getMapper(AnimeMapper.class);
 

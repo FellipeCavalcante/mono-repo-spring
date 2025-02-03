@@ -1,12 +1,14 @@
 package com.dev.fellipe.anime_service.repository;
 
 import com.dev.fellipe.anime_service.domain.Producer;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class ProducerHardCodedRepository {
     private static final List<Producer> PRODUCERS = new ArrayList<>();
 

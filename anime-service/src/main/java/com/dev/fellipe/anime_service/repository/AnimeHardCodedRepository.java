@@ -1,12 +1,13 @@
 package com.dev.fellipe.anime_service.repository;
 
 import com.dev.fellipe.anime_service.domain.Anime;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class AnimeHardCodedRepository {
     private static List<Anime> ANIMES = new ArrayList<>();
 
