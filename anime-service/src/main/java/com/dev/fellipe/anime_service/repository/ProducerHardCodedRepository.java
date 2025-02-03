@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProduceHardCodeRepository {
+public class ProducerHardCodedRepository {
     private static final List<Producer> PRODUCERS = new ArrayList<>();
 
     static {
@@ -17,7 +17,7 @@ public class ProduceHardCodeRepository {
         PRODUCERS.addAll(List.of(mappa, madhouse, kyotoAnimation));
     }
 
-    public static List<Producer> findAll() {
+    public List<Producer> findAll() {
         return PRODUCERS;
     }
 
