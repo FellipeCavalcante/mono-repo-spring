@@ -43,11 +43,30 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findById returns a producers with given id")
-    void findAll_ReturnProducersById_WhenSucessul() {
+    void findById_ReturnProducersById_WhenSucessul() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var expectedProducer = producerList.getFirst();
         var producers = repository.findById(expectedProducer.getId());
         Assertions.assertThat(producers).isPresent().contains(expectedProducer);
+    }
+
+    @Test
+    @DisplayName("findByName returns empty list when name is null")
+    void findByName_ReturnEmptyList_WhenNameIsNull() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producers = repository.findByName(null);
+        Assertions.assertThat(producers).isNotNull().isEmpty();
+    }
+
+    @Test
+    @DisplayName("findByName returns list with found object when name exists")
+    void findByName_ReturnsProducerList_WhenNameExists() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var expectedProducer = producerList.getFirst();
+        var producers = repository.findByName(expectedProducer.getName());
+        Assertions.assertThat(producers).contains(expectedProducer);
     }
 }
