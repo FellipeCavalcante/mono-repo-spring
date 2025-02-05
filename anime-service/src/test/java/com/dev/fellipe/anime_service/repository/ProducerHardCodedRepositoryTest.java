@@ -31,7 +31,7 @@ class ProducerHardCodedRepositoryTest {
         var studioGhibli = com.dev.fellipe.anime_service.domain.Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
         producerList.addAll(List.of(mappa, studioGhibli, witStudio));
     }
-    
+
     @Test
     @DisplayName("findAll returns a lost with all producers")
     void findAll_ReturnAllProducers_WhenSucessul() {
@@ -95,5 +95,20 @@ class ProducerHardCodedRepositoryTest {
         var ProducerToDelete = producerList.getFirst();
         repository.delete(ProducerToDelete);
         Assertions.assertThat(this.producerList).doesNotContain(ProducerToDelete);
+    }
+
+    @Test
+    @DisplayName("update updates a producer")
+    void update_UpdatesProducer_WhenSucessul() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToUpdate = this.producerList.getFirst();
+        producerToUpdate.setName("updatedName");
+        repository.update(producerToUpdate);
+        Assertions.assertThat(this.producerList).contains(producerToUpdate);
+
+        var producerUpdatedOptional = repository.findById(producerToUpdate.getId());
+        Assertions.assertThat(producerUpdatedOptional).isPresent();
+        Assertions.assertThat(producerUpdatedOptional.get().getName()).isEqualTo("updatedName");
     }
 }
