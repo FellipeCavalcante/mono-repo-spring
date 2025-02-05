@@ -86,4 +86,14 @@ class ProducerHardCodedRepositoryTest {
         var producerSavedOptional = repository.findById(producerToSave.getId());
         Assertions.assertThat(producerSavedOptional).isPresent().contains(producerToSave);
     }
+
+    @Test
+    @DisplayName("delete remove a producer")
+    void delete_RemoveProducer_WhenSucessul() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var ProducerToDelete = producerList.getFirst();
+        repository.delete(ProducerToDelete);
+        Assertions.assertThat(this.producerList).doesNotContain(ProducerToDelete);
+    }
 }
