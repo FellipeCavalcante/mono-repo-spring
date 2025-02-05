@@ -69,4 +69,21 @@ class ProducerHardCodedRepositoryTest {
         var producers = repository.findByName(expectedProducer.getName());
         Assertions.assertThat(producers).contains(expectedProducer);
     }
+
+    @Test
+    @DisplayName("Save creates a producer")
+    void save_CreatesProducer_WhenSucessul() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToSave = Producer.builder()
+                .id(99L)
+                .name("test")
+                .createdAt(LocalDateTime.now())
+                .build();
+        var producer = repository.save(producerToSave);
+        Assertions.assertThat(producer).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
+
+        var producerSavedOptional = repository.findById(producerToSave.getId());
+        Assertions.assertThat(producerSavedOptional).isPresent().contains(producerToSave);
+    }
 }
