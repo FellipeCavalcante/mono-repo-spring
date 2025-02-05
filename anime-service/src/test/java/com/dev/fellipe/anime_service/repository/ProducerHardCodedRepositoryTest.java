@@ -22,14 +22,14 @@ class ProducerHardCodedRepositoryTest {
 
     @Mock
     private ProducerData producerData;
-    private final List<Producer> producerList = new ArrayList<>();
+    private List<Producer> producerList;
 
     @BeforeEach
     void init() {
         var mappa = com.dev.fellipe.anime_service.domain.Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
         var witStudio = com.dev.fellipe.anime_service.domain.Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
         var studioGhibli = com.dev.fellipe.anime_service.domain.Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
-        producerList.addAll(List.of(mappa, studioGhibli, witStudio));
+        producerList = new ArrayList<>(List.of(mappa, studioGhibli, witStudio));
     }
 
     @Test
