@@ -33,7 +33,7 @@ class AnimeHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findAll returns a lost with all animes")
-    void findAll_ReturnAllAnime_WhenSucessul() {
+    void findAll_ReturnAllAnime_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var animes = repository.findAll();
@@ -43,7 +43,7 @@ class AnimeHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findById returns a anime with given id")
-    void findById_ReturnAnimeById_WhenSucessul() {
+    void findById_ReturnAnimeById_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var expectedAnime = animeList.getFirst();
@@ -72,7 +72,7 @@ class AnimeHardCodedRepositoryTest {
 
     @Test
     @DisplayName("Save creates a anime")
-    void save_CreatesProducer_WhenSucessul() {
+    void save_CreatesProducer_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var animeToSave = Anime.builder()
@@ -89,7 +89,7 @@ class AnimeHardCodedRepositoryTest {
 
     @Test
     @DisplayName("delete remove a anime")
-    void delete_RemovesAnime_WhenSucessul() {
+    void delete_RemovesAnime_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var animeToRemove = animeList.getFirst();
@@ -99,7 +99,7 @@ class AnimeHardCodedRepositoryTest {
 
     @Test
     @DisplayName("update uptade a anime")
-    void update_RemovesAnime_WhenSucessul() {
+    void update_RemovesAnime_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
         var animeToUpdate = animeList.getFirst();

@@ -75,7 +75,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findById returns a producers with given id")
     @Order(4)
-    void findById_ReturnProducersById_WhenSucessul() {
+    void findById_ReturnProducersById_WhenSuccesful() {
         var expectedProducer = producerList.getFirst();
         BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.of(expectedProducer));
 
@@ -99,7 +99,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("Save creates a producer")
     @Order(6)
-    void save_CreatesProducer_WhenSucessul() {
+    void save_CreatesProducer_WhenSuccesful() {
         var producerToSave = Producer.builder()
                 .id(99L)
                 .name("test")
@@ -114,7 +114,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("delete remove a producer")
     @Order(7)
-    void delete_RemoveProducer_WhenSucessul() {
+    void delete_RemoveProducer_WhenSuccesful() {
         var producerToDelete = producerList.getFirst();
         BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
 
@@ -137,7 +137,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("update updates a producer")
     @Order(9)
-    void update_UpdatesProducer_WhenSucessul() {
+    void update_UpdatesProducer_WhenSuccesful() {
         var producerToUpdate = producerList.getFirst();
         producerToUpdate.setName("updatedName");
 

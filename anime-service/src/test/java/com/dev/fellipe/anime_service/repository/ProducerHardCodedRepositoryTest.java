@@ -34,7 +34,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findAll returns a lost with all producers")
-    void findAll_ReturnAllProducers_WhenSucessul() {
+    void findAll_ReturnAllProducers_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producers = repository.findAll();
@@ -43,7 +43,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("findById returns a producers with given id")
-    void findById_ReturnProducersById_WhenSucessul() {
+    void findById_ReturnProducersById_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var expectedProducer = producerList.getFirst();
@@ -72,7 +72,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("Save creates a producer")
-    void save_CreatesProducer_WhenSucessul() {
+    void save_CreatesProducer_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producerToSave = Producer.builder()
@@ -89,7 +89,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("delete remove a producer")
-    void delete_RemoveProducer_WhenSucessul() {
+    void delete_RemoveProducer_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var ProducerToDelete = producerList.getFirst();
@@ -99,7 +99,7 @@ class ProducerHardCodedRepositoryTest {
 
     @Test
     @DisplayName("update updates a producer")
-    void update_UpdatesProducer_WhenSucessul() {
+    void update_UpdatesProducer_WhenSuccesful() {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
         var producerToUpdate = this.producerList.getFirst();

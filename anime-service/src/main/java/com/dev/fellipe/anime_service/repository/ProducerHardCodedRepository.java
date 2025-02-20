@@ -1,9 +1,7 @@
 package com.dev.fellipe.anime_service.repository;
 
 import com.dev.fellipe.anime_service.domain.Producer;
-import external.dependency.Connection;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 
@@ -15,15 +13,12 @@ import java.util.Optional;
 @Log4j2
 public class ProducerHardCodedRepository {
     private final ProducerData producerData;
-    @Qualifier(value = "connectionMySql")
-    private final Connection connection;
 
     public List<Producer> findAll() {
         return producerData.getProducers();
     }
 
     public Optional<Producer> findById(Long id) {
-        log.debug(connection);
         return producerData.getProducers().stream().filter(producer -> producer.getId().equals(id)).findFirst();
     }
 
