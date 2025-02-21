@@ -1,5 +1,6 @@
 package com.dev.fellipe.anime_service.service;
 
+import com.dev.fellipe.anime_service.commons.AnimeUtils;
 import com.dev.fellipe.anime_service.domain.Anime;
 import com.dev.fellipe.anime_service.repository.AnimeHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -12,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +29,12 @@ class AnimeServiceTest {
     private AnimeHardCodedRepository repository;
     private List<Anime> animeList;
 
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     @BeforeEach
     void init() {
-        var ninjaKamui = Anime.builder().id(1L).name("Ninja Kamui").build();
-        var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
-        var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
-        animeList =  new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        animeList =  animeUtils.newAnimeList();
     }
 
     @Test
@@ -98,10 +98,7 @@ class AnimeServiceTest {
     @DisplayName("Save creates a anime")
     @Order(6)
     void save_CreatesAnime_WhenSuccesful() {
-        var animeToSave = Anime.builder()
-                .id(99L)
-                .name("test")
-                .build();
+        var animeToSave = animeUtils.newAnimeToSave();
         BDDMockito.when(repository.save(animeToSave)).thenReturn(animeToSave);
 
         var savedAnime = service.save(animeToSave);

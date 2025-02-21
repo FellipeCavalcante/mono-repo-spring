@@ -1,5 +1,6 @@
 package com.dev.fellipe.anime_service.repository;
 
+import com.dev.fellipe.anime_service.commons.AnimeUtils;
 import com.dev.fellipe.anime_service.domain.Anime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,12 +23,12 @@ class AnimeHardCodedRepositoryTest {
     private AnimeData animeData;
     private List<Anime> animeList;
 
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     @BeforeEach
     void init() {
-        var ninjaKamui = Anime.builder().id(1L).name("Ninja Kamui").build();
-        var kaijuu = Anime.builder().id(2L).name("Kaijuu-8gou").build();
-        var kimetsuNoYaiba = Anime.builder().id(3L).name("Kimetsu No Yaiba").build();
-        animeList =  new ArrayList<>(List.of(ninjaKamui, kaijuu, kimetsuNoYaiba));
+        animeList = animeUtils.newAnimeList();
     }
 
     @Test
@@ -75,10 +75,7 @@ class AnimeHardCodedRepositoryTest {
     void save_CreatesProducer_WhenSuccesful() {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animeList);
 
-        var animeToSave = Anime.builder()
-                .id(99L)
-                .name("solo elevening")
-                .build();
+        var animeToSave = animeUtils.newAnimeToSave();
 
         var anime = repository.save(animeToSave);
         Assertions.assertThat(anime).isEqualTo(animeToSave).hasNoNullFieldsOrProperties();

@@ -1,5 +1,6 @@
 package com.dev.fellipe.anime_service.service;
 
+import com.dev.fellipe.anime_service.commons.ProducerUtils;
 import com.dev.fellipe.anime_service.domain.Producer;
 import com.dev.fellipe.anime_service.repository.ProducerHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -12,8 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +30,12 @@ class ProducerServiceTest {
     private ProducerHardCodedRepository repository;
     private List<Producer> producerList;
 
+    @InjectMocks
+    private ProducerUtils producerUtils;
+
     @BeforeEach
     void init() {
-        var mappa = com.dev.fellipe.anime_service.domain.Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = com.dev.fellipe.anime_service.domain.Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = com.dev.fellipe.anime_service.domain.Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
-        producerList = new ArrayList<>(List.of(mappa, studioGhibli, witStudio));
+        producerList = producerUtils.newProducerList();
     }
 
     @Test
@@ -100,11 +99,7 @@ class ProducerServiceTest {
     @DisplayName("Save creates a producer")
     @Order(6)
     void save_CreatesProducer_WhenSuccesful() {
-        var producerToSave = Producer.builder()
-                .id(99L)
-                .name("test")
-                .createdAt(LocalDateTime.now())
-                .build();
+        var producerToSave = producerUtils.newProducerToSave();
         BDDMockito.when(repository.save(producerToSave)).thenReturn(producerToSave);
 
         var savedProducer = service.save(producerToSave);
