@@ -1,6 +1,7 @@
 package com.dev.fellipe.anime_service.repository;
 
 import com.dev.fellipe.anime_service.domain.Producer;
+import com.dev.fellipe.anime_service.config.Connection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;

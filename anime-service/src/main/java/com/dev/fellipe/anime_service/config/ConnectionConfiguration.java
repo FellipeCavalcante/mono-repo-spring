@@ -1,9 +1,9 @@
 package com.dev.fellipe.anime_service.config;
 
-import external.dependency.Connection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class ConnectionConfiguration {
@@ -15,6 +15,7 @@ public class ConnectionConfiguration {
     private String password;
 
     @Bean
+    @Primary
     public Connection connectionMySql() {
         return new Connection(url, username, password);
     }

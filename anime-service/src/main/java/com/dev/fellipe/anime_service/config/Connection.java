@@ -1,4 +1,4 @@
-package external.dependency;
+package com.dev.fellipe.anime_service.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
