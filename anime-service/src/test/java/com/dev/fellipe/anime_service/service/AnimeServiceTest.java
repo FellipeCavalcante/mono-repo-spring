@@ -34,7 +34,7 @@ class AnimeServiceTest {
 
     @BeforeEach
     void init() {
-        animeList =  animeUtils.newAnimeList();
+        animeList = animeUtils.newAnimeList();
     }
 
     @Test
@@ -152,5 +152,5 @@ class AnimeServiceTest {
         Assertions.assertThatException()
                 .isThrownBy(() -> service.update(animeToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
-    }   
+    }
 }

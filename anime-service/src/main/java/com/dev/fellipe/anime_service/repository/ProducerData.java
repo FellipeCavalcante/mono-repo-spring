@@ -11,7 +11,7 @@ import java.util.List;
 public class ProducerData {
     private final List<Producer> producers = new ArrayList<>();
 
-     {
+    {
         var mappa = com.dev.fellipe.anime_service.domain.Producer.builder().id(1L).name("Mappa").createdAt(LocalDateTime.now()).build();
         var kyotoAnimation = com.dev.fellipe.anime_service.domain.Producer.builder().id(2L).name("Kyoto Animation").createdAt(LocalDateTime.now()).build();
         var madhouse = com.dev.fellipe.anime_service.domain.Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();

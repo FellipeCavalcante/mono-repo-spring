@@ -1,10 +1,8 @@
 package com.dev.fellipe.anime_service.commons;
 
 import com.dev.fellipe.anime_service.domain.Anime;
-import com.dev.fellipe.anime_service.domain.Producer;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
