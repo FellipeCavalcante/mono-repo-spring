@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@Getter
 @Setter
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,20 +16,4 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }
