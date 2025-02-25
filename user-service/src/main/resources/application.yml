@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: user-service
+  threads:
+    virtual:
+      enabled: true
+
+logging:
+  level:
+    com.dev.fellipe.user_service: debug
+
+server:
+  servlet:
+    context-path: /
+  error:
+    include-stacktrace: on_param
+  tomcat:
+    threads:
+      max: 20

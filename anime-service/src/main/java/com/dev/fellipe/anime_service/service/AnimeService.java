@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AnimeService {
+
     private final AnimeHardCodedRepository repository;
 
     public List<Anime> findAll(String name) {
