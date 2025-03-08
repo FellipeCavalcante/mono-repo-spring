@@ -6,6 +6,7 @@ import com.dev.fellipe.user_service.request.UserPutRequest;
 import com.dev.fellipe.user_service.response.UserGetResponse;
 import com.dev.fellipe.user_service.response.UserPostResponse;
 import com.dev.fellipe.user_service.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,12 +26,14 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<List<UserGetResponse>> getUsers(@RequestParam(required = false) String name) {
-        log.debug("Request recived to list all users, param name '{}'", name);
+    public ResponseEntity<List<UserGetResponse>> findAll(@RequestParam(required = false) String firstName) {
+        log.debug("Request received to list all users, param first name '{}'", firstName);
 
-        var users = service.findAll(name);
-        var userGetResponseList = mapper.toUserGetResponseList(users);
-        return ResponseEntity.ok(userGetResponseList);
+        var users = service.findAll(firstName);
+
+        var userGetResponses = mapper.toUserGetResponseList(users);
+
+        return ResponseEntity.ok(userGetResponses);
     }
 
     @GetMapping("{id}")
@@ -44,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserPostResponse> create(@RequestBody UserPostRequest request) {
+    public ResponseEntity<UserPostResponse> create(@RequestBody @Valid UserPostRequest request) {
         log.debug("Request to create user: {}", request);
 
         var user = mapper.toUser(request);
@@ -57,7 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         log.debug("Request to delete user by id: {}", id);
 
         service.delete(id);
@@ -66,11 +69,11 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody UserPutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
         var userToUpdate = mapper.toUser(request);
         service.update(userToUpdate);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -10,6 +10,7 @@ logging:
     com.dev.fellipe.user_service: debug
 
 server:
+  port: 8090
   servlet:
     context-path: /
   error:

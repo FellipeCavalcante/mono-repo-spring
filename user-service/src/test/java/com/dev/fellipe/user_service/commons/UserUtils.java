@@ -1,10 +1,12 @@
 package com.dev.fellipe.user_service.commons;
 
 import com.dev.fellipe.user_service.domain.User;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserUtils {
     public List<User> newUserList() {
         var fellipe = User.builder().id(1L).firstName("Fellipe").lastName("Azevedo").email("fellipe@azevedo.com").build();
