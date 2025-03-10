@@ -6,6 +6,7 @@ import com.dev.fellipe.anime_service.request.ProducerPutRequest;
 import com.dev.fellipe.anime_service.response.ProducerGetResponse;
 import com.dev.fellipe.anime_service.response.ProducerPostResponse;
 import com.dev.fellipe.anime_service.service.ProducerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -47,7 +48,7 @@ public class ProducersController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<ProducerPostResponse> save(@RequestBody @Valid ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         log.info("Headers received: {}", headers);
 
         var producer = mapper.toProducer(producerPostRequest);
@@ -67,7 +68,7 @@ public class ProducersController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid ProducerPutRequest request) {
         log.debug("Request to update producer {}", request);
 
         var producerToUpdate = mapper.toProducer(request);
