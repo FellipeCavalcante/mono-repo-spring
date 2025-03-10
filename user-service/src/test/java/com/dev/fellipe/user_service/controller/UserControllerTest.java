@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -122,8 +122,36 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("POST v1/users creates a user")
+    @DisplayName("DELETE v1/users/99 throws ResponseStatusException when user is not found")
     @Order(6)
+    void delete_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        var id = 99L;
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
+
+    }
+
+    @Test
+    @DisplayName("DELETE v1/users/99 remove a user")
+    @Order(7)
+    void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+
+        var userId = 99;
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", userId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
+    }
+
+    @Test
+    @DisplayName("POST v1/users creates a user")
+    @Order(8)
     void save_CreatesProducer_WhenSuccesful() throws Exception {
         var request = fIleUtis.readResourceFile("user/post-request-user-200.json");
         var response = fIleUtis.readResourceFile("user/post-response-user-201.json");
@@ -146,9 +174,9 @@ class UserControllerTest {
 
     @ParameterizedTest
     @MethodSource("postUserBadRequestSource")
-    @DisplayName("POST v1/users returns bad request when fields are empty")
-    @Order(7)
-    void save_ReturnsBadRequest_WhenFieldsAreEmpty(String fileNames, List<String> errors) throws Exception {
+    @DisplayName("POST v1/users returns bad request when fields are invalid")
+    @Order(9)
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileNames, List<String> errors) throws Exception {
         var request = fIleUtis.readResourceFile("user/%s".formatted(fileNames));
 
         var mvcResult = mockMvc.perform(MockMvcRequestBuilders
@@ -169,24 +197,19 @@ class UserControllerTest {
     }
 
     private static Stream<Arguments> postUserBadRequestSource() {
-        var firstNameRequiredError = "The field 'firstName' is required";
-        var lastNameRequiredError = "The field 'lastName' is required";
-        var emailRequiredError = "The field 'email' is required";
-        var emailInvalidError = "The e-mail is not valid";
-
-        var allErrors = List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError);
-        var emailError = Collections.singletonList(emailInvalidError);
+        var allRequiredErrors = allRequiredErrors();
+        var emailError = invalidEmailErrors();
 
         return Stream.of(
-                Arguments.of("post-request-user-empty-fields-400.json", allErrors),
-                Arguments.of("post-request-user-blank-fields-400.json", allErrors),
+                Arguments.of("post-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("post-request-user-blank-fields-400.json", allRequiredErrors),
                 Arguments.of("post-request-user-invalid-email-400.json", emailError)
         );
     }
 
     @Test
     @DisplayName("PUT v1/users updates a user")
-    @Order(8)
+    @Order(10)
     void update_UpdatesProducer_WhenSuccesful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
 
@@ -201,47 +224,54 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
-    @Test
-    @DisplayName("PUT v1/users updates an user")
-    @Order(9)
-    void update_UpdatesUser_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+    @ParameterizedTest
+    @MethodSource("putUserBadRequestSource")
+    @DisplayName("PUT v1/users returns bad request when fields are invalid")
+    @Order(11)
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileNames, List<String> errors) throws Exception {
+        var request = fIleUtis.readResourceFile("user/%s".formatted(fileNames));
 
-        var request = fIleUtis.readResourceFile("user/put-request-user-200.json");
-        mockMvc.perform(MockMvcRequestBuilders
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
                         .content(request)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        Assertions.assertThat(resolvedException).isNotNull();
+
+        Assertions.assertThat(resolvedException.getMessage())
+                .contains(errors);
     }
 
-    @Test
-    @DisplayName("DELETE v1/users/99 throws ResponseStatusException when user is not found")
-    @Order(10)
-    void delete_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
-        var id = 99L;
+    private static Stream<Arguments> putUserBadRequestSource() {
+        var allRequiredErrors = allRequiredErrors();
+        allRequiredErrors.add("The field 'id' cannot be null");
+        var emailError = invalidEmailErrors();
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
-
+        return Stream.of(
+                Arguments.of("put-request-user-empty-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-blank-fields-400.json", allRequiredErrors),
+                Arguments.of("put-request-user-invalid-email-400.json", emailError)
+        );
     }
 
-    @Test
-    @DisplayName("DELETE v1/users/99 remove a user")
-    @Order(11)
-    void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+    private static List<String> allRequiredErrors() {
+        var firstNameRequiredError = "The field 'firstName' is required";
+        var lastNameRequiredError = "The field 'lastName' is required";
+        var emailRequiredError = "The field 'email' is required";
 
-        var userId = 99;
-
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", userId))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
+        return new ArrayList<>(List.of(firstNameRequiredError, lastNameRequiredError, emailRequiredError));
     }
+
+    private static List<String> invalidEmailErrors() {
+        var emailInvalidError = "The e-mail is not valid";
+
+        return List.of(emailInvalidError);
+    }
+
 }
