@@ -117,11 +117,14 @@ class ProducersControllerTest {
     @Order(5)
     void findById_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var response = fIleUtis.readResourceFile("producer/get-producer-by-id-404.json");
+
         var id = 99L;
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -165,8 +168,27 @@ class ProducersControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE v1/producers/1 remove a producer")
+    @DisplayName("PUT v1/producers throws NotFound when producer is not found")
     @Order(8)
+    void update_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+        var request = fIleUtis.readResourceFile("producer/put-request-producer-404.json");
+        var response = fIleUtis.readResourceFile("producer/put-producer-by-id-404.json");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+
+    }
+
+    @Test
+    @DisplayName("DELETE v1/producers/1 remove a producer")
+    @Order(9)
     void delete_RemoveProducer_WhenSuccesful() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
 
@@ -179,22 +201,22 @@ class ProducersControllerTest {
 
     @Test
     @DisplayName("DELETE v1/producers/99 throws NotFound when producer is not found")
-    @Order(9)
+    @Order(10)
     void delete_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
-
+        var response = fIleUtis.readResourceFile("producer/delete-producer-by-id-404.json");
         var producerId = 99;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", producerId))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("Producer not found"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @ParameterizedTest
     @MethodSource("postProducerBadRequestSource")
     @DisplayName("POST v1/producers returns bad request when fields are invalid")
-    @Order(10)
+    @Order(11)
     void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileNames, List<String> errors) throws Exception {
         var request = fIleUtis.readResourceFile("producer/%s".formatted(fileNames));
 
@@ -227,7 +249,7 @@ class ProducersControllerTest {
     @ParameterizedTest
     @MethodSource("putProducerBadRequestSource")
     @DisplayName("PUT v1/producers returns bad request when fields are invalid")
-    @Order(11)
+    @Order(12)
     void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileNames, List<String> errors) throws Exception {
         var request = fIleUtis.readResourceFile("producer/%s".formatted(fileNames));
 
