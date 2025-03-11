@@ -1,6 +1,7 @@
 package com.dev.fellipe.user_service.service;
 
 import com.dev.fellipe.user_service.domain.User;
+import com.dev.fellipe.user_service.exception.NotFoundException;
 import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class UserService {
 
     public User findById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!"));
+                .orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
     public User save(User user) {

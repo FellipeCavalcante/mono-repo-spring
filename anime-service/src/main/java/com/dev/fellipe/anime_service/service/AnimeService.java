@@ -1,6 +1,7 @@
 package com.dev.fellipe.anime_service.service;
 
 import com.dev.fellipe.anime_service.domain.Anime;
+import com.dev.fellipe.anime_service.exception.NotFoundException;
 import com.dev.fellipe.anime_service.repository.AnimeHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class AnimeService {
 
     public Anime findByIdOrThrowNotFound(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+                .orElseThrow(() -> new NotFoundException("Anime not found"));
     }
 
     public Anime save(Anime anime) {

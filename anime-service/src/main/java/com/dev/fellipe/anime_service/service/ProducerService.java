@@ -1,6 +1,7 @@
 package com.dev.fellipe.anime_service.service;
 
 import com.dev.fellipe.anime_service.domain.Producer;
+import com.dev.fellipe.anime_service.exception.NotFoundException;
 import com.dev.fellipe.anime_service.repository.ProducerHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class ProducerService {
 
     public Producer findByIdOrThrowNotFound(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producer not found"));
+                .orElseThrow(() -> new NotFoundException("Producer not found"));
     }
 
     public Producer save(Producer producer) {

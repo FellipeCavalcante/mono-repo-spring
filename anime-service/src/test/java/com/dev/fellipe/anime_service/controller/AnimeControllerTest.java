@@ -99,7 +99,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("GET v1/animes/1 returns a animes with given id")
     @Order(4)
-    void findById_ReturnProducersById_WhenSuccesful() throws Exception {
+    void findById_ReturnProducersById_WhenSuccessful() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-by-id-200.json");
         var id = 1L;
@@ -111,9 +111,9 @@ class AnimeControllerTest {
     }
 
     @Test
-    @DisplayName("GET v1/animes/99 throws ResponseStatusException 404 when anime is not found")
+    @DisplayName("GET v1/animes/99 throws NotFound 404 when anime is not found")
     @Order(5)
-    void findById_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
+    void findById_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var id = 99L;
 
@@ -125,7 +125,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("POST v1/animes creates a anime")
     @Order(6)
-    void save_CreatesProducer_WhenSuccesful() throws Exception {
+    void save_CreatesProducer_WhenSuccessful() throws Exception {
         var request = fIleUtis.readResourceFile("anime/post-request-anime-200.json");
         var response = fIleUtis.readResourceFile("anime/post-response-anime-201.json");
 
@@ -148,7 +148,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("PUT v1/animes updates a anime")
     @Order(7)
-    void update_UpdatesProducer_WhenSuccesful() throws Exception {
+    void update_UpdatesProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
 
         var request = fIleUtis.readResourceFile("anime/put-request-anime-200.json");
@@ -165,7 +165,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("DELETE v1/animes/1 remove a anime")
     @Order(9)
-    void delete_RemoveProducer_WhenSuccesful() throws Exception {
+    void delete_RemoveProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
 
         var animeId = animesList.getFirst().getId();
@@ -176,9 +176,9 @@ class AnimeControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE v1/animes/99 remove a anime")
+    @DisplayName("DELETE v1/animes/99 throws NotFound when anime is not found")
     @Order(10)
-    void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
+    void delete_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
 
         var animeId = 99;

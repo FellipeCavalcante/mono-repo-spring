@@ -98,7 +98,7 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users/1 returns a users with given id")
     @Order(4)
-    void findById_ReturnProducersById_WhenSuccesful() throws Exception {
+    void findById_ReturnProducersById_WhenSuccessful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-by-id-200.json");
         var id = 1L;
@@ -110,9 +110,9 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("GET v1/users/99 throws ResponseStatusException 404 when user is not found")
+    @DisplayName("GET v1/users/99 throws NotFound 404 when user is not found")
     @Order(5)
-    void findById_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
+    void findById_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var id = 99L;
 
@@ -122,9 +122,9 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE v1/users/99 throws ResponseStatusException when user is not found")
+    @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
     @Order(6)
-    void delete_ThrowsResponseStatusException_WhenUserIsNotFound() throws Exception {
+    void delete_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var id = 99L;
 
@@ -136,9 +136,9 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE v1/users/99 remove a user")
+    @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
     @Order(7)
-    void delete_ThrowsResponseStatusException_WhenProducerIsNotFound() throws Exception {
+    void delete_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
 
         var userId = 99;
@@ -152,7 +152,7 @@ class UserControllerTest {
     @Test
     @DisplayName("POST v1/users creates a user")
     @Order(8)
-    void save_CreatesProducer_WhenSuccesful() throws Exception {
+    void save_CreatesProducer_WhenSuccessful() throws Exception {
         var request = fIleUtis.readResourceFile("user/post-request-user-200.json");
         var response = fIleUtis.readResourceFile("user/post-response-user-201.json");
 
@@ -210,7 +210,7 @@ class UserControllerTest {
     @Test
     @DisplayName("PUT v1/users updates a user")
     @Order(10)
-    void update_UpdatesProducer_WhenSuccesful() throws Exception {
+    void update_UpdatesProducer_WhenSuccessful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
 
         var request = fIleUtis.readResourceFile("user/put-request-user-200.json");
