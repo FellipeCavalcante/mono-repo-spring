@@ -1,12 +1,10 @@
 package com.dev.fellipe.user_service.service;
 
+import com.dev.fellipe.exception.NotFoundException;
 import com.dev.fellipe.user_service.domain.User;
-import com.dev.fellipe.user_service.exception.NotFoundException;
 import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

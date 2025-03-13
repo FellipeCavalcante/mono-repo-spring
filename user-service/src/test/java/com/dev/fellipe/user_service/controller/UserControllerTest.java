@@ -112,13 +112,15 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users/99 throws NotFound 404 when user is not found")
     @Order(5)
-    void findById_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
+    void findById_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        var response = fIleUtis.readResourceFile("user/get-user-by-id-404.json");
         var id = 99L;
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
     }
 
     @Test
@@ -126,27 +128,26 @@ class UserControllerTest {
     @Order(6)
     void delete_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        var response = fIleUtis.readResourceFile("user/delete-user-by-id-404.json");
         var id = 99L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
+                .andExpect(MockMvcResultMatchers.content().json(response));
 
     }
 
     @Test
-    @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
+    @DisplayName("DELETE v1/users/1 removes an user")
     @Order(7)
-    void delete_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
+    void delete_RemoveUser_WhenSuccessful() throws Exception {
         BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        var id = usersList.getFirst().getId();
 
-        var userId = 99;
-
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", userId))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.status().reason("User not found!"));
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -224,10 +225,28 @@ class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
+    @Test
+    @DisplayName("PUT v1/users throws NotFound when user is not found")
+    @Order(11)
+    void update_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
+        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        var request = fIleUtis.readResourceFile("user/put-request-user-404.json");
+        var response = fIleUtis.readResourceFile("user/put-user-by-id-404.json");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
     @ParameterizedTest
     @MethodSource("putUserBadRequestSource")
     @DisplayName("PUT v1/users returns bad request when fields are invalid")
-    @Order(11)
+    @Order(12)
     void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileNames, List<String> errors) throws Exception {
         var request = fIleUtis.readResourceFile("user/%s".formatted(fileNames));
 
