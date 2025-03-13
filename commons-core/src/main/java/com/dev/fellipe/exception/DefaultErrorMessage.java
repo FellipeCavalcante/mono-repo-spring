@@ -1,4 +1,4 @@
-package com.dev.fellipe.anime_service.exception;
+package com.dev.fellipe.exception;
 
 public record DefaultErrorMessage(int status, String message) {
 }

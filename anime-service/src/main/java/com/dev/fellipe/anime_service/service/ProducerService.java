@@ -1,12 +1,10 @@
 package com.dev.fellipe.anime_service.service;
 
 import com.dev.fellipe.anime_service.domain.Producer;
-import com.dev.fellipe.anime_service.exception.NotFoundException;
 import com.dev.fellipe.anime_service.repository.ProducerHardCodedRepository;
+import com.dev.fellipe.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

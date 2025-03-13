@@ -1,7 +1,6 @@
-package com.dev.fellipe.anime_service.exception;
+package com.dev.fellipe.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
 
 public class NotFoundException extends ResponseStatusException {

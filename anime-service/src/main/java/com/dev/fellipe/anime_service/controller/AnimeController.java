@@ -1,7 +1,5 @@
 package com.dev.fellipe.anime_service.controller;
 
-import com.dev.fellipe.anime_service.exception.DefaultErrorMessage;
-import com.dev.fellipe.anime_service.exception.NotFoundException;
 import com.dev.fellipe.anime_service.mapper.AnimeMapper;
 import com.dev.fellipe.anime_service.request.AnimePostRequest;
 import com.dev.fellipe.anime_service.request.AnimePutRequest;
