@@ -20,7 +20,7 @@ public interface UserMapper {
     User toUser(UserPutRequest request);
 
     UserPostResponse toUserPostResponse(User user);
-    
+
     UserGetResponse toUserGetResponse(User user);
 
     List<UserGetResponse> toUserGetResponseList(List<User> users);
