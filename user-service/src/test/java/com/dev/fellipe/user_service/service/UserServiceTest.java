@@ -3,6 +3,7 @@ package com.dev.fellipe.user_service.service;
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
+import com.dev.fellipe.user_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,8 @@ class UserServiceTest {
 
     @Mock
     private UserHardCodedRepository repository;
+    @Mock
+    private UserRepository userRepository;
     private List<User> userList;
 
     @InjectMocks
@@ -41,7 +44,7 @@ class UserServiceTest {
     @DisplayName("findAll returns a lost with all users when argument is null")
     @Order(1)
     void findAll_ReturnAllUsers_WhenArgumentIsNull() {
-        BDDMockito.when(repository.findAll()).thenReturn(userList);
+        BDDMockito.when(userRepository.findAll()).thenReturn(userList);
 
         var users = service.findAll(null);
         org.assertj.core.api.Assertions.assertThat(users).isNotNull().hasSameElementsAs(userList);

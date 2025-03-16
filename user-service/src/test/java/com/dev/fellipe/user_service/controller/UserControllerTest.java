@@ -5,6 +5,7 @@ import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.UserData;
 import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
+import com.dev.fellipe.user_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,6 +40,9 @@ class UserControllerTest {
     @MockBean
     private UserData userData;
 
+    @MockBean
+    private UserRepository userRepository;
+
     @SpyBean
     private UserHardCodedRepository repository;
     private List<User> usersList;
@@ -58,7 +62,7 @@ class UserControllerTest {
     @DisplayName("GET v1/users returns a list with all users when argument is null")
     @Order(1)
     void findAll_ReturnsAllUsers_WhenArgumentIsNull() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
+        BDDMockito.when(userRepository.findAll()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-null-name-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
