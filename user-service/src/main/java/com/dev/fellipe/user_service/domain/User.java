@@ -3,6 +3,7 @@ package com.dev.fellipe.user_service.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+@With
 @Getter
 @Setter
 @Builder

@@ -1,5 +1,6 @@
 package com.dev.fellipe.user_service.service;
 
+import com.dev.fellipe.exception.EmailAlreadyExistsException;
 import com.dev.fellipe.exception.NotFoundException;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.UserRepository;
@@ -57,6 +58,6 @@ public class UserService {
     }
 
     private void throwEmailExistsException(User user) {
-        throw new ResponseStatusException(BAD_REQUEST, "E-mail %s already exists".formatted(user.getEmail()));
+        throw new EmailAlreadyExistsException("E-mail %s already exists".formatted(user.getEmail()));
     }
 }
