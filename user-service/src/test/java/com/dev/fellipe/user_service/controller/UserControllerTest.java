@@ -3,8 +3,6 @@ package com.dev.fellipe.user_service.controller;
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
-import com.dev.fellipe.user_service.repository.UserData;
-import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -16,7 +14,6 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,13 +36,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserData userData;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    @SpyBean
-    private UserHardCodedRepository repository;
+    private UserRepository repository;
     private List<User> usersList;
 
     @Autowired
@@ -62,7 +54,7 @@ class UserControllerTest {
     @DisplayName("GET v1/users returns a list with all users when argument is null")
     @Order(1)
     void findAll_ReturnsAllUsers_WhenArgumentIsNull() throws Exception {
-        BDDMockito.when(userRepository.findAll()).thenReturn(usersList);
+        BDDMockito.when(repository.findAll()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-null-name-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
@@ -75,9 +67,11 @@ class UserControllerTest {
     @DisplayName("GET v1/users?firstName=Fellipe returns list with found object when first name exists")
     @Order(2)
     void findAll_ReturnsFoundUserInList_WhenFirstNameIsFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-fellipe-name-200.json");
         var firstName = "Fellipe";
+        var fellipe = usersList.stream().filter(user -> user.getFirstName().equals(firstName)).findFirst().orElse(null);
+
+        BDDMockito.when(repository.findByFirstNameIgnoreCase(firstName)).thenReturn(Collections.singletonList(fellipe));
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL).param("firstName", firstName))
                 .andDo(MockMvcResultHandlers.print())
@@ -89,7 +83,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users?name=x returns empty list when name is not found")
     @Order(3)
     void findByName_ReturnEmptyList_WhenNameIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-x-name-200.json");
         var name = "x";
 
@@ -103,9 +96,10 @@ class UserControllerTest {
     @DisplayName("GET v1/users/1 returns a users with given id")
     @Order(4)
     void findById_ReturnProducersById_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-by-id-200.json");
         var id = 1L;
+        var foundUser = usersList.stream().filter(user -> user.getId().equals(id)).findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(foundUser);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
@@ -117,7 +111,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users/99 throws NotFound 404 when user is not found")
     @Order(5)
     void findById_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-by-id-404.json");
         var id = 99L;
 
@@ -131,7 +124,6 @@ class UserControllerTest {
     @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
     @Order(6)
     void delete_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/delete-user-by-id-404.json");
         var id = 99L;
 
@@ -146,8 +138,9 @@ class UserControllerTest {
     @DisplayName("DELETE v1/users/1 removes an user")
     @Order(7)
     void delete_RemoveUser_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var id = usersList.getFirst().getId();
+        var foundUser = usersList.stream().filter(user -> user.getId().equals(id)).findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(foundUser);
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
@@ -216,9 +209,11 @@ class UserControllerTest {
     @DisplayName("PUT v1/users updates a user")
     @Order(10)
     void update_UpdatesProducer_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
-
         var request = fIleUtis.readResourceFile("user/put-request-user-200.json");
+        var id = 1L;
+        var foundUser = usersList.stream().filter(user -> user.getId().equals(id)).findFirst();
+
+        BDDMockito.when(repository.findById(id)).thenReturn(foundUser);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
@@ -233,7 +228,6 @@ class UserControllerTest {
     @DisplayName("PUT v1/users throws NotFound when user is not found")
     @Order(11)
     void update_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(usersList);
         var request = fIleUtis.readResourceFile("user/put-request-user-404.json");
         var response = fIleUtis.readResourceFile("user/put-user-by-id-404.json");
 

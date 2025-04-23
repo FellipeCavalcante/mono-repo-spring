@@ -2,7 +2,6 @@ package com.dev.fellipe.user_service.service;
 
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
-import com.dev.fellipe.user_service.repository.UserHardCodedRepository;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -27,9 +26,7 @@ class UserServiceTest {
     private UserService service;
 
     @Mock
-    private UserHardCodedRepository repository;
-    @Mock
-    private UserRepository userRepository;
+    private UserRepository repository;
     private List<User> userList;
 
     @InjectMocks
@@ -44,7 +41,7 @@ class UserServiceTest {
     @DisplayName("findAll returns a lost with all users when argument is null")
     @Order(1)
     void findAll_ReturnAllUsers_WhenArgumentIsNull() {
-        BDDMockito.when(userRepository.findAll()).thenReturn(userList);
+        BDDMockito.when(repository.findAll()).thenReturn(userList);
 
         var users = service.findAll(null);
         org.assertj.core.api.Assertions.assertThat(users).isNotNull().hasSameElementsAs(userList);
@@ -56,7 +53,7 @@ class UserServiceTest {
     void findByName_ReturnsUserList_WhenNameExists() {
         User user = userList.getFirst();
         var expectedUsersFound = singletonList(user);
-        BDDMockito.when(repository.findByName(user.getFirstName())).thenReturn(expectedUsersFound);
+        BDDMockito.when(repository.findByFirstNameIgnoreCase(user.getFirstName())).thenReturn(expectedUsersFound);
 
         var usersFound = service.findAll(user.getFirstName());
         org.assertj.core.api.Assertions.assertThat(usersFound).containsAll(expectedUsersFound);
@@ -67,7 +64,7 @@ class UserServiceTest {
     @Order(3)
     void findByName_ReturnEmptyList_WhenNameIsNotFound() {
         var name = "not-found";
-        BDDMockito.when(repository.findByName(name)).thenReturn(emptyList());
+        BDDMockito.when(repository.findByFirstNameIgnoreCase(name)).thenReturn(emptyList());
 
         var users = service.findAll(name);
         org.assertj.core.api.Assertions.assertThat(users).isNotNull().isEmpty();
@@ -139,7 +136,7 @@ class UserServiceTest {
         userToUpdate.setFirstName("updatedName");
 
         BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
-        BDDMockito.doNothing().when(repository).update(userToUpdate);
+        BDDMockito.when(repository.save(userToUpdate)).thenReturn(userToUpdate);
 
         org.assertj.core.api.Assertions.assertThatNoException().isThrownBy(() -> service.update(userToUpdate));
     }
