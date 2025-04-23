@@ -4,9 +4,13 @@ import com.dev.fellipe.exception.NotFoundException;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class UserService {
     }
 
     public User save(User user) {
+        assertEmailDosNotExists(user.getEmail());
         return repository.save(user);
     }
 
@@ -33,10 +38,25 @@ public class UserService {
 
     public void update(User userToUpdate) {
         assertUserExist(userToUpdate.getId());
+        assertEmailDosNotExists(userToUpdate.getEmail(), userToUpdate.getId());
         repository.save(userToUpdate);
     }
 
     public void assertUserExist(Long id) {
         findById(id);
+    }
+
+    public void assertEmailDosNotExists(String email) {
+        repository.findByEmail(email)
+                .ifPresent(this::throwEmailExistsException);
+    }
+
+    public void assertEmailDosNotExists(String email, Long id) {
+        repository.findByEmailAndIdNot(email, id)
+                .ifPresent(this::throwEmailExistsException);
+    }
+
+    private void throwEmailExistsException(User user) {
+        throw new ResponseStatusException(BAD_REQUEST, "E-mail %s already exists".formatted(user.getEmail()));
     }
 }
