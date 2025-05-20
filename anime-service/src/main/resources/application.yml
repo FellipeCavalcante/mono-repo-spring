@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: optional:classpath:.env[.properties]
   application:
     name: anime-service
   datasource:
-    url: jdbc:mysql://localhost:3307/user_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3307/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: ${ENV_ROOT_USER}
     password: ${ENV_ROOT_PASSWORD}
   jpa:

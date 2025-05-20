@@ -2,6 +2,7 @@ package com.dev.fellipe.anime_service.service;
 
 import com.dev.fellipe.anime_service.domain.Anime;
 import com.dev.fellipe.anime_service.repository.AnimeHardCodedRepository;
+import com.dev.fellipe.anime_service.repository.AnimeRepository;
 import com.dev.fellipe.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnimeService {
 
-    private final AnimeHardCodedRepository repository;
+    private final AnimeRepository repository;
 
     public List<Anime> findAll(String name) {
         return name == null ? repository.findAll() : repository.findByName(name);
@@ -34,7 +35,7 @@ public class AnimeService {
 
     public void update(Anime animeToUpdate) {
         assertAnimeExist(animeToUpdate.getId());
-        repository.update(animeToUpdate);
+        repository.save(animeToUpdate);
     }
 
     public void assertAnimeExist(Long id) {
