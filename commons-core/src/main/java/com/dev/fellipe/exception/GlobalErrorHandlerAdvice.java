@@ -9,6 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalErrorHandlerAdvice {
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<DefaultErrorMessage> handleNotFoundException(NotFoundException e) {
         var error = new DefaultErrorMessage(HttpStatus.NOT_FOUND.value(), e.getReason());
@@ -18,7 +19,7 @@ public class GlobalErrorHandlerAdvice {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<DefaultErrorMessage> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
-        var error = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), "Duplicated entry for one pf the unique field");
+        var error = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), "Duplicated entry for one of the unique fields");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }

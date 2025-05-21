@@ -1,4 +1,4 @@
-package com.dev.fellipe.anime_service.repository;
+package com.dev.fellipe.anime_service.anime;
 
 import com.dev.fellipe.anime_service.domain.Anime;
 import org.springframework.data.jpa.repository.JpaRepository;

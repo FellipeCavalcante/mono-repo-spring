@@ -1,8 +1,6 @@
-package com.dev.fellipe.anime_service.service;
+package com.dev.fellipe.anime_service.anime;
 
 import com.dev.fellipe.anime_service.domain.Anime;
-import com.dev.fellipe.anime_service.repository.AnimeHardCodedRepository;
-import com.dev.fellipe.anime_service.repository.AnimeRepository;
 import com.dev.fellipe.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
