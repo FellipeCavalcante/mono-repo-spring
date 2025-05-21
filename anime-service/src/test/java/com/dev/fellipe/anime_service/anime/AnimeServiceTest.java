@@ -25,7 +25,7 @@ class AnimeServiceTest {
     private AnimeService service;
 
     @Mock
-    private AnimeHardCodedRepository repository;
+    private AnimeRepository repository;
     private List<Anime> animeList;
 
     @InjectMocks
@@ -135,7 +135,7 @@ class AnimeServiceTest {
         animeToUpdate.setName("updatedName");
 
         BDDMockito.when(repository.findById(animeToUpdate.getId())).thenReturn(Optional.of(animeToUpdate));
-        BDDMockito.doNothing().when(repository).update(animeToUpdate);
+        BDDMockito.when(repository.save(animeToUpdate)).thenReturn(animeToUpdate);
 
         org.assertj.core.api.Assertions.assertThatNoException().isThrownBy(() -> service.update(animeToUpdate));
     }

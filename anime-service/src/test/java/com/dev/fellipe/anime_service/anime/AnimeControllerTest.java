@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -28,22 +29,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(controllers = AnimeController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = "com.dev.fellipe")
+@ComponentScan(basePackages = {"com.dev.fellipe.anime_service.anime", "com.dev.fellipe.anime_service.commons", "com.dev.fellipe.exception"})
 class AnimeControllerTest {
     private static final String URL = "/v1/animes";
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private AnimeData animeData;
-
-    @SpyBean
-    private AnimeHardCodedRepository repository;
-    private List<Anime> animesList;
-
     @Autowired
     private FIleUtis fIleUtis;
+
+    @MockBean
+    private AnimeRepository repository;
+    private List<Anime> animesList;
 
     @Autowired
     private AnimeUtils animeUtils;
@@ -57,7 +55,7 @@ class AnimeControllerTest {
     @DisplayName("GET v1/animes returns a list with all animes when argument is null")
     @Order(1)
     void findAll_ReturnsAllAnimes_WhenArgumentIsNull() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
+        BDDMockito.when(repository.findAll()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-null-name-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
@@ -70,9 +68,11 @@ class AnimeControllerTest {
     @DisplayName("GET v1/animes?name=Ufotable returns list with found object when name exists")
     @Order(2)
     void findByName_ReturnsProducerList_WhenNameExists() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-mashle-name-200.json");
         var name = "Mashle";
+        var mashle = animesList.stream().filter(anime -> anime.getName().equals(name)).findFirst().orElse(null);
+
+        BDDMockito.when(repository.findByName(name)).thenReturn(Collections.singletonList(mashle));
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL).param("name", name))
                 .andDo(MockMvcResultHandlers.print())
@@ -84,7 +84,6 @@ class AnimeControllerTest {
     @DisplayName("GET v1/animes?name=x returns empty list when name is not found")
     @Order(3)
     void findByName_ReturnEmptyList_WhenNameIsNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-x-name-200.json");
         var name = "x";
 
@@ -98,9 +97,10 @@ class AnimeControllerTest {
     @DisplayName("GET v1/animes/1 returns a animes with given id")
     @Order(4)
     void findById_ReturnProducersById_WhenSuccessful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-by-id-200.json");
         var id = 1L;
+        var foundAnime = animesList.stream().filter(anime -> anime.getId().equals(id)).findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(foundAnime);
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
@@ -112,7 +112,6 @@ class AnimeControllerTest {
     @DisplayName("GET v1/animes/99 throws NotFound 404 when anime is not found")
     @Order(5)
     void findById_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/get-anime-by-id-404.json");
         var id = 99L;
 
@@ -150,9 +149,10 @@ class AnimeControllerTest {
     @DisplayName("PUT v1/animes updates a anime")
     @Order(7)
     void update_UpdatesProducer_WhenSuccessful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
-
         var request = fIleUtis.readResourceFile("anime/put-request-anime-200.json");
+        var id = 1L;
+        var foundAnime = animesList.stream().filter(anime -> anime.getId().equals(id)).findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(foundAnime);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(URL)
@@ -167,7 +167,6 @@ class AnimeControllerTest {
     @DisplayName("PUT v1/animes throws NotFound when anime is not found")
     @Order(8)
     void update_ThrowsNotFound_WhenAnimeIsNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var request = fIleUtis.readResourceFile("anime/put-request-anime-404.json");
         var response = fIleUtis.readResourceFile("anime/put-anime-by-id-404.json");
 
@@ -186,11 +185,11 @@ class AnimeControllerTest {
     @DisplayName("DELETE v1/animes/1 remove a anime")
     @Order(9)
     void delete_RemoveProducer_WhenSuccessful() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
+        var id = animesList.getFirst().getId();
+        var foundAnime = animesList.stream().filter(anime -> anime.getId().equals(id)).findFirst();
+        BDDMockito.when(repository.findById(id)).thenReturn(foundAnime);
 
-        var animeId = animesList.getFirst().getId();
-
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", animeId))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -199,7 +198,6 @@ class AnimeControllerTest {
     @DisplayName("DELETE v1/animes/99 throws NotFound when anime is not found")
     @Order(10)
     void delete_ThrowsNotFound_WhenProducerIsNotFound() throws Exception {
-        BDDMockito.when(animeData.getAnimes()).thenReturn(animesList);
         var response = fIleUtis.readResourceFile("anime/delete-anime-by-id-404.json");
         var animeId = 99;
 
