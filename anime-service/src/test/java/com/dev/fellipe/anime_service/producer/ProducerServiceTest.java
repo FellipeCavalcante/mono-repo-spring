@@ -26,7 +26,7 @@ class ProducerServiceTest {
     private ProducerService service;
 
     @Mock
-    private ProducerHardCodedRepository repository;
+    private ProducerRepository repository;
     private List<Producer> producerList;
 
     @InjectMocks
@@ -73,7 +73,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("findById returns a producers with given id")
     @Order(4)
-    void findById_ReturnProducersById_WhenSuccesful() {
+    void findById_ReturnProducersById_WhenSuccessful() {
         var expectedProducer = producerList.getFirst();
         BDDMockito.when(repository.findById(expectedProducer.getId())).thenReturn(Optional.of(expectedProducer));
 
@@ -97,7 +97,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("Save creates a producer")
     @Order(6)
-    void save_CreatesProducer_WhenSuccesful() {
+    void save_CreatesProducer_WhenSuccessful() {
         var producerToSave = producerUtils.newProducerToSave();
         BDDMockito.when(repository.save(producerToSave)).thenReturn(producerToSave);
 
@@ -108,7 +108,7 @@ class ProducerServiceTest {
     @Test
     @DisplayName("delete remove a producer")
     @Order(7)
-    void delete_RemoveProducer_WhenSuccesful() {
+    void delete_RemoveProducer_WhenSuccessful() {
         var producerToDelete = producerList.getFirst();
         BDDMockito.when(repository.findById(producerToDelete.getId())).thenReturn(Optional.of(producerToDelete));
 
@@ -131,12 +131,12 @@ class ProducerServiceTest {
     @Test
     @DisplayName("update updates a producer")
     @Order(9)
-    void update_UpdatesProducer_WhenSuccesful() {
+    void update_UpdatesProducer_WhenSuccessful() {
         var producerToUpdate = producerList.getFirst();
         producerToUpdate.setName("updatedName");
 
         BDDMockito.when(repository.findById(producerToUpdate.getId())).thenReturn(Optional.of(producerToUpdate));
-        BDDMockito.doNothing().when(repository).update(producerToUpdate);
+        BDDMockito.when(repository.save(producerToUpdate)).thenReturn(producerToUpdate);
 
         Assertions.assertThatNoException().isThrownBy(() -> service.update(producerToUpdate));
     }
