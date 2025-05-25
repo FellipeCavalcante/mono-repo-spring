@@ -5,13 +5,10 @@ import com.dev.fellipe.exception.NotFoundException;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +24,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
+    //    @Transactional(rollbackFor = Exception.class)
     public User save(User user) {
         assertEmailDosNotExists(user.getEmail());
         return repository.save(user);
