@@ -3,7 +3,9 @@ package com.dev.fellipe.user_service.controller;
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
+import com.dev.fellipe.user_service.repository.ProfileRepository;
 import com.dev.fellipe.user_service.repository.UserRepository;
+import com.dev.fellipe.user_service.service.ProfileService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +36,12 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private ProfileRepository profileRepository;
+
+    @MockBean
+    private ProfileService profileService;
 
     @MockBean
     private UserRepository repository;
