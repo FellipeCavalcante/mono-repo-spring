@@ -21,3 +21,4 @@ public class UserProfile {
     @ManyToOne(optional = false)
     private Profile profile;
 }
+    

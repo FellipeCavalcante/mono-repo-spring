@@ -18,6 +18,7 @@ spring:
 logging:
   level:
     com.dev.fellipe.user_service: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 server:
   port: 8090
