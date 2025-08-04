@@ -1,6 +1,7 @@
 package com.dev.fellipe.user_service.controller;
 
-import com.dev.fellipe.user_service.domain.UserProfile;
+import com.dev.fellipe.user_service.mapper.UserProfileMapper;
+import com.dev.fellipe.user_service.response.UserProfileGetResponse;
 import com.dev.fellipe.user_service.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +19,15 @@ import java.util.List;
 public class UserProfileController {
 
     private final UserProfileService service;
+    private final UserProfileMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<UserProfile>> findAll() {
+    public ResponseEntity<List<UserProfileGetResponse>> findAll() {
         log.debug("Request received to list all user profiles");
 
         var userProfiles = service.findAll();
+        var userProfileGetResponses = mapper.toUserProfileGetResponse(userProfiles);
 
-        return ResponseEntity.ok(userProfiles);
+        return ResponseEntity.ok(userProfileGetResponses);
     }
 }
