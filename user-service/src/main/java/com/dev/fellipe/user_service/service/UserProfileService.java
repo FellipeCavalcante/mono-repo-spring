@@ -1,5 +1,6 @@
 package com.dev.fellipe.user_service.service;
 
+import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.domain.UserProfile;
 import com.dev.fellipe.user_service.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,5 +15,9 @@ public class UserProfileService {
 
     public List<UserProfile> findAll() {
         return repository.findAll();
+    }
+
+    public List<User> findAllUsersByProfileId(Long id) {
+        return repository.findAllUsersByProfileId(id);
     }
 }
