@@ -98,7 +98,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Save creates a user")
     @Order(6)
-    void save_CreatesUser_WhenSuccesful() {
+    void save_CreatesUser_WhenSuccessful() {
         var userToSave = userUtils.newUserToSave();
         BDDMockito.when(repository.save(userToSave)).thenReturn(userToSave);
         BDDMockito.when(repository.findByEmail(userToSave.getEmail())).thenReturn(Optional.empty());
@@ -110,7 +110,7 @@ class UserServiceTest {
     @Test
     @DisplayName("delete remove a user")
     @Order(7)
-    void delete_RemoveUser_WhenSuccesful() {
+    void delete_RemoveUser_WhenSuccessful() {
         var userToDelete = userList.getFirst();
         BDDMockito.when(repository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
 
