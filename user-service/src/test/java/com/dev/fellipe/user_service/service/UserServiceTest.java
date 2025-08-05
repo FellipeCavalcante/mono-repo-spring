@@ -100,11 +100,12 @@ class UserServiceTest {
     @Order(6)
     void save_CreatesUser_WhenSuccessful() {
         var userToSave = userUtils.newUserToSave();
-        BDDMockito.when(repository.save(userToSave)).thenReturn(userToSave);
+        var userSaved = userUtils.newUserSaved();
+        BDDMockito.when(repository.save(userToSave)).thenReturn(userSaved);
         BDDMockito.when(repository.findByEmail(userToSave.getEmail())).thenReturn(Optional.empty());
 
         var savedUser = service.save(userToSave);
-        org.assertj.core.api.Assertions.assertThat(savedUser).isEqualTo(userToSave).hasNoNullFieldsOrProperties();
+        org.assertj.core.api.Assertions.assertThat(savedUser).isEqualTo(userSaved).hasNoNullFieldsOrProperties();
     }
 
     @Test

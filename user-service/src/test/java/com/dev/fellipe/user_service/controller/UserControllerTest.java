@@ -4,6 +4,7 @@ import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.ProfileRepository;
+import com.dev.fellipe.user_service.repository.UserProfileRepository;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import com.dev.fellipe.user_service.service.ProfileService;
 import org.assertj.core.api.Assertions;
@@ -46,6 +47,9 @@ class UserControllerTest {
     @MockBean
     private UserRepository repository;
     private List<User> usersList;
+
+    @MockBean
+    private UserProfileRepository userProfileRepository;
 
     @Autowired
     private FIleUtis fIleUtis;
@@ -162,7 +166,7 @@ class UserControllerTest {
         var request = fIleUtis.readResourceFile("user/post-request-user-200.json");
         var response = fIleUtis.readResourceFile("user/post-response-user-201.json");
 
-        var userToSave = userUtils.newUserToSave();
+        var userToSave = userUtils.newUserSaved();
 
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(userToSave);
 

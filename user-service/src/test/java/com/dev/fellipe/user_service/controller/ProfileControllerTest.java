@@ -4,6 +4,7 @@ import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.ProfileUtils;
 import com.dev.fellipe.user_service.domain.Profile;
 import com.dev.fellipe.user_service.repository.ProfileRepository;
+import com.dev.fellipe.user_service.repository.UserProfileRepository;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -42,6 +43,9 @@ class ProfileControllerTest {
     private UserRepository userRepository;
 
     private List<Profile> profilesList;
+
+    @MockBean
+    private UserProfileRepository userProfileRepository;
 
     @Autowired
     private FIleUtis fIleUtis;
