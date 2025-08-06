@@ -1,6 +1,7 @@
 package com.dev.fellipe.user_service.controller;
 
 import com.dev.fellipe.user_service.commons.ProfileUtils;
+import com.dev.fellipe.user_service.config.TestcontainersConfiguration;
 import com.dev.fellipe.user_service.domain.Profile;
 import com.dev.fellipe.user_service.response.ProfileGetResponse;
 import com.dev.fellipe.user_service.response.ProfilePostResponse;
@@ -10,14 +11,18 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Transactional
+@Import(TestcontainersConfiguration.class)
 public class ProfileControllerIT {
     private static final String URL = "/v1/profiles";
 
