@@ -1,6 +1,7 @@
 package com.dev.fellipe.user_service.repository;
 
 import com.dev.fellipe.user_service.commons.UserUtils;
+import com.dev.fellipe.user_service.config.TestcontainersConfiguration;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,7 +11,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(UserUtils.class)
+@Import({UserUtils.class, TestcontainersConfiguration.class})
 @TestMethodOrder(MethodOrderer.class)
 class UserProfileRepositoryTest {
 
