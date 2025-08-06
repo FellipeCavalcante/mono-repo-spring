@@ -1,7 +1,7 @@
 package com.dev.fellipe.user_service.repository;
 
 import com.dev.fellipe.user_service.commons.UserUtils;
-import com.dev.fellipe.user_service.config.TestcontainersConfiguration;
+import com.dev.fellipe.user_service.config.IntegrationTestBasicConfig;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -16,8 +16,8 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 //@Transactional(propagation = Propagation.NOT_SUPPORTED)
-@Import({UserUtils.class, TestcontainersConfiguration.class})
-class UserRepositoryTest {
+@Import(UserUtils.class)
+class UserRepositoryTest extends IntegrationTestBasicConfig {
 
     @Autowired
     private UserRepository repository;

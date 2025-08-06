@@ -1,17 +1,15 @@
 package com.dev.fellipe.user_service.controller;
 
+import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.ProfileUtils;
-import com.dev.fellipe.user_service.config.TestcontainersConfiguration;
-import com.dev.fellipe.user_service.domain.Profile;
+import com.dev.fellipe.user_service.config.IntegrationTestBasicConfig;
 import com.dev.fellipe.user_service.response.ProfileGetResponse;
 import com.dev.fellipe.user_service.response.ProfilePostResponse;
-import com.dev.fellipe.user_service.commons.FIleUtis;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,8 +20,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Transactional
-@Import(TestcontainersConfiguration.class)
-public class ProfileControllerIT {
+public class ProfileControllerIT extends IntegrationTestBasicConfig {
     private static final String URL = "/v1/profiles";
 
     @Autowired
