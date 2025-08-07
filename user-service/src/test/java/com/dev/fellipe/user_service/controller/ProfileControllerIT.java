@@ -13,13 +13,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Transactional
 public class ProfileControllerIT extends IntegrationTestBasicConfig {
     private static final String URL = "/v1/profiles";
 
@@ -32,7 +30,8 @@ public class ProfileControllerIT extends IntegrationTestBasicConfig {
 
     @Test
     @DisplayName("GET v1/profiles returns a list with all profiles successful")
-    @Sql(value = "/sql/init_two_profiles.sql")
+    @Sql(value = "/sql/init_two_profiles.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_profiles.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(1)
     void findAll_ReturnsAllProfiles_WhenSuccessful() throws Exception {
         var typeReference = new ParameterizedTypeReference<List<ProfileGetResponse>>() {};
@@ -40,7 +39,7 @@ public class ProfileControllerIT extends IntegrationTestBasicConfig {
         var responseEntity = testRestTemplate.exchange(URL, HttpMethod.GET, null, typeReference);
         Assertions.assertThat(responseEntity).isNotNull();
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(responseEntity.getBody()).isNotNull().doesNotContainNull();
+        Assertions.assertThat(responseEntity.getBody()).isNotEmpty().doesNotContainNull();
 
         responseEntity
                 .getBody()
