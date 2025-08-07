@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class ProfileUtils {
     public List<Profile> newProfileList() {
-        var admin = Profile.builder().id(1L).name("Administrator").description("Admins everythinh").build();
+        var admin = Profile.builder().id(1L).name("Administrator").description("Admins everything").build();
         var manager = Profile.builder().id(2L).name("Manager").description("Managers users").build();
 
         return new ArrayList<>(List.of(admin, manager));
