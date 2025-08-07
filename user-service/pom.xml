@@ -32,6 +32,8 @@
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<commons-core.version>0.0.1-SNAPSHOT</commons-core.version>
 		<mysql-connector-j.version>.1.0</mysql-connector-j.version>
+		<rest-assured.version>5.5.0</rest-assured.version>
+		<datasource-proxy-spring-boot-starter.version>1.9.2</datasource-proxy-spring-boot-starter.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -87,7 +89,7 @@
 		<dependency>
 			<groupId>com.github.gavlyukovskiy</groupId>
 			<artifactId>datasource-proxy-spring-boot-starter</artifactId>
-			<version>1.9.2</version>
+			<version>${datasource-proxy-spring-boot-starter.version}</version>
 		</dependency>
 
 		<dependency>
@@ -99,6 +101,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>${rest-assured.version}</version>
 			<scope>test</scope>
 		</dependency>
 
