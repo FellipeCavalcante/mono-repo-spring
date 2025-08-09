@@ -1,0 +1,112 @@
+package com.dev.fellipe.user_service.controller;
+
+import com.dev.fellipe.user_service.commons.FIleUtis;
+import com.dev.fellipe.user_service.commons.UserUtils;
+import com.dev.fellipe.user_service.config.IntegrationTestBasicConfig;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.jdbc.Sql;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
+    private static final String URL = "/v1/users";
+
+    @Autowired
+    private UserUtils userUtils;
+    @Autowired
+    private FIleUtis fileUtils;
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUrl() {
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = port;
+    }
+
+    @Test
+    @DisplayName("GET v1/profiles returns a list with all profiles successful")
+    @Sql(value = "/sql/user/init_three_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Order(1)
+    void findAll_ReturnsAllUsers_WhenArgumentIsNull() {
+        var expectedResponse = fileUtils.readResourceFile("user/get-user-null-name-200.json");
+
+        var response = RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .when()
+                .get(URL)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .log().all()
+                .extract().response().body().asString();
+
+        JsonAssertions.assertThatJson(response)
+                .and(users -> {
+                    users.node("[0].id").asNumber().isPositive();
+                    users.node("[1].id").asNumber().isPositive();
+                    users.node("[2].id").asNumber().isPositive();
+                });
+
+        JsonAssertions.assertThatJson(response)
+                .whenIgnoringPaths("[*].id")
+                .isEqualTo(expectedResponse);
+    }
+
+//    @Test
+//    @DisplayName("GET v1/profiles returns empty list when nothing is not found")
+//    @Order(2)
+//    void findByName_ReturnEmptyList_WhenNothingIsFound() throws Exception {
+//        var response = fileUtils.readResourceFile("profile/get-profiles-empty-list-200.json");
+//
+//        RestAssured.given()
+//                .contentType(ContentType.JSON).accept(ContentType.JSON)
+//                .when()
+//                .get(URL)
+//                .then()
+//                .statusCode(HttpStatus.OK.value())
+//                .body(Matchers.equalTo(response))
+//                .log().all();
+//    }
+//
+//    @ParameterizedTest
+//    @MethodSource("postProfileBadRequestSource")
+//    @DisplayName("POST v1/profiles returns bad request when fields are invalid")
+//    @Order(4)
+//    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String requestFile, String responseFile) throws Exception {
+//        var request = fileUtils.readResourceFile("profile/%s".formatted(requestFile));
+//        var expectedResponse = fileUtils.readResourceFile("profile/%s".formatted(responseFile));
+//
+//        var response = RestAssured.given()
+//                .contentType(ContentType.JSON).accept(ContentType.JSON)
+//                .body(request)
+//                .when()
+//                .post(URL)
+//                .then()
+//                .statusCode(HttpStatus.BAD_REQUEST.value())
+//                .log().all()
+//                .extract().response().body().asString();
+//
+//
+//        JsonAssertions.assertThatJson(response)
+//                .whenIgnoringPaths("timestamp")
+//                .when(Option.IGNORING_ARRAY_ORDER)
+//                .isEqualTo(expectedResponse);
+//
+//    }
+//
+//    private static Stream<Arguments> postProfileBadRequestSource() {
+//        return Stream.of(
+//                Arguments.of("post-request-profile-empty-fields-400.json", "post-response-profile-empty-fields-400.json"),
+//                Arguments.of("post-request-profile-blank-fields-400.json", "post-response-profile-blank-fields-400.json")
+//        );
+//    }
+}

@@ -38,7 +38,7 @@ class UserRepositoryTest extends IntegrationTestBasicConfig {
     @Test
     @DisplayName("findAll returns a lost with all users")
     @Order(2)
-    @Sql("/sql/init_one_user.sql")
+    @Sql("/sql/user/init_one_user.sql")
     void findAll_ReturnAllUsers_WhenSuccessful() {
         var users = repository.findAll();
         Assertions.assertThat(users).isNotEmpty();
