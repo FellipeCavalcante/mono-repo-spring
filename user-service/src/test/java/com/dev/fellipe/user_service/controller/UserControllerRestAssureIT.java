@@ -61,21 +61,28 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
                 .isEqualTo(expectedResponse);
     }
 
-//    @Test
-//    @DisplayName("GET v1/profiles returns empty list when nothing is not found")
-//    @Order(2)
-//    void findByName_ReturnEmptyList_WhenNothingIsFound() throws Exception {
-//        var response = fileUtils.readResourceFile("profile/get-profiles-empty-list-200.json");
-//
-//        RestAssured.given()
-//                .contentType(ContentType.JSON).accept(ContentType.JSON)
-//                .when()
-//                .get(URL)
-//                .then()
-//                .statusCode(HttpStatus.OK.value())
-//                .body(Matchers.equalTo(response))
-//                .log().all();
-//    }
+    @Test
+    @DisplayName("GET v1/users?firstName=Fellipe returns list with found object when first name exists")
+    @Sql(value = "/sql/user/init_three_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Order(2)
+    void findAll_ReturnsFoundUserInList_WhenFirstNameIsFound() {
+        var expectedResponse = fileUtils.readResourceFile("user/get-user-fellipe-name-200.json");
+
+        var response = RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .when()
+                .queryParam("firstName", "Fellipe")
+                .get(URL)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .log().all()
+                .extract().response().body().asString();
+
+        JsonAssertions.assertThatJson(response)
+                .whenIgnoringPaths("[*].id")
+                .isEqualTo(expectedResponse);
+    }
 //
 //    @ParameterizedTest
 //    @MethodSource("postProfileBadRequestSource")
