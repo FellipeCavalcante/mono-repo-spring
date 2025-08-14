@@ -1,5 +1,6 @@
 package com.dev.fellipe.user_service.controller;
 
+import com.dev.fellipe.exception.ApiError;
 import com.dev.fellipe.exception.DefaultErrorMessage;
 import com.dev.fellipe.user_service.mapper.UserMapper;
 import com.dev.fellipe.user_service.request.UserPostRequest;
@@ -74,6 +75,18 @@ public class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create user",
+            responses = {
+                    @ApiResponse(description = "Save user in the database",
+                            responseCode = "201",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserPostResponse.class))
+                    ),
+                    @ApiResponse(description = "Bad Request",
+                            responseCode = "400",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiError.class))
+                    ),
+            })
     public ResponseEntity<UserPostResponse> create(@RequestBody @Valid UserPostRequest request) {
         log.debug("Request to create user: {}", request);
 
