@@ -17,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 //@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @Import(UserUtils.class)
-class UserRepositoryTest extends IntegrationTestBasicConfig {
+class UserRepositoryTestIT extends IntegrationTestBasicConfig {
 
     @Autowired
     private UserRepository repository;
