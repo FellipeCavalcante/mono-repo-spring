@@ -40,6 +40,9 @@
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.joining(", "));
 
+            System.out.println("Mensagem extraída: '" + defaultMessage + "'");
+            System.out.println("URI: " + request.getRequestURI());
+
             var apiError = ApiError.builder()
                     .timestamp(OffsetDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -47,6 +50,13 @@
                     .path(request.getRequestURI())
                     .message(defaultMessage)
                     .build();
+
+            System.out.println("ApiError construído:");
+            System.out.println("  timestamp: " + apiError.getTimestamp());
+            System.out.println("  status: " + apiError.getStatus());
+            System.out.println("  error: " + apiError.getError());
+            System.out.println("  path: " + apiError.getPath());
+            System.out.println("  message: '" + apiError.getMessage() + "'");
 
             return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
 

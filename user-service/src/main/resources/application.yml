@@ -25,9 +25,10 @@ server:
   servlet:
     context-path: /
   error:
-    include-stacktrace: on_param
-    include-binding-errors: always
+    include-stacktrace: never
+    include-binding-errors: never
     include-message: always
+    include-exception: false
   tomcat:
     threads:
       max: 20
