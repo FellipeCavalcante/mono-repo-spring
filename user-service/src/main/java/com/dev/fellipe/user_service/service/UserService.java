@@ -36,8 +36,13 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-        assertUserExist(userToUpdate.getId());
         assertEmailDosNotExists(userToUpdate.getEmail(), userToUpdate.getId());
+        var savedUser = findById(userToUpdate.getId());
+
+        userToUpdate.setRoles(savedUser.getRoles());
+
+        if (userToUpdate.getPassword() == null) userToUpdate.setPassword(savedUser.getPassword());
+
         repository.save(userToUpdate);
     }
 
