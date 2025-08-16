@@ -19,6 +19,7 @@ logging:
   level:
     com.dev.fellipe.user_service: debug
     net.ttddyy.dsproxy.listener: debug
+    org.springframework.security: debug
 
 server:
   port: 8090
