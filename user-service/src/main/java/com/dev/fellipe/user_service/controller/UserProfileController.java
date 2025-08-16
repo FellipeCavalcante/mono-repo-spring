@@ -5,6 +5,7 @@ import com.dev.fellipe.user_service.mapper.UserProfileMapper;
 import com.dev.fellipe.user_service.response.UserProfileGetResponse;
 import com.dev.fellipe.user_service.response.UserProfileUserGetResponse;
 import com.dev.fellipe.user_service.service.UserProfileService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("v1/user-profiles")
 @Slf4j
 @RequiredArgsConstructor
+@SecurityRequirement(name = "basicAuth")
 public class UserProfileController {
 
     private final UserProfileService service;
