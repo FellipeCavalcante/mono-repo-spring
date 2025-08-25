@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
@@ -36,8 +35,6 @@ public class ProfileControllerRestAssureIT extends IntegrationTestBasicConfig {
     private ProfileUtils profileUtils;
     @Autowired
     private FIleUtis fileUtils;
-    @LocalServerPort
-    private int port;
 
     @Autowired
     @Qualifier(value = "requestSpecificationRegularUser")

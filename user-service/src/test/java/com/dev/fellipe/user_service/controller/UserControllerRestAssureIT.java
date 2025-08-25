@@ -3,21 +3,25 @@ package com.dev.fellipe.user_service.controller;
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.UserUtils;
 import com.dev.fellipe.user_service.config.IntegrationTestBasicConfig;
+import com.dev.fellipe.user_service.config.RestAssuredConfig;
 import com.dev.fellipe.user_service.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.assertj.core.api.Assertions;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RestAssuredConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
     private static final String URL = "/v1/users";
 
@@ -25,16 +29,21 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
     private UserUtils userUtils;
     @Autowired
     private FIleUtis fileUtils;
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    @Qualifier(value = "requestSpecificationAdminUser")
+    private RequestSpecification requestSpecificationAdminUser;
+
+    @Autowired
+    @Qualifier(value = "requestSpecificationRegularUser")
+    private RequestSpecification requestSpecificationRegularUser;
+
     @BeforeEach
     void setUrl() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = port;
+        RestAssured.requestSpecification = requestSpecificationRegularUser;
     }
 
     @Test
@@ -43,6 +52,8 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
     @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(1)
     void findAll_ReturnsAllUsers_WhenArgumentIsNull() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var expectedResponse = fileUtils.readResourceFile("user/get-user-null-name-200.json");
 
         var response = RestAssured.given()
@@ -72,6 +83,8 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
     @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(2)
     void findAll_ReturnsFoundUserInList_WhenFirstNameIsFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var expectedResponse = fileUtils.readResourceFile("user/get-user-fellipe-name-200.json");
 
         var response = RestAssured.given()
@@ -95,6 +108,8 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
     @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(3)
     void findByName_ReturnEmptyList_WhenNameIsNotFound() throws Exception {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var expectedResponse = fileUtils.readResourceFile("user/get-user-x-name-200.json");
         var firstName = "x";
 
@@ -115,11 +130,13 @@ public class UserControllerRestAssureIT extends IntegrationTestBasicConfig {
 
     @Test
     @DisplayName("GET v1/users/1 returns a users with given id")
-    @Sql(value = "/sql/user/init_one_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/user/init_one_admin_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = "/sql/user/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(4)
     void findById_ReturnProducersById_WhenSuccessful() throws Exception {
-        var expectedResponse = fileUtils.readResourceFile("user/get-user-by-id-200.json");
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
+        var expectedResponse = fileUtils.readResourceFile("user/get-user-by-id-admin-200.json");
         var users = repository.findByFirstNameIgnoreCase("Fellipe");
 
         Assertions.assertThat(users).hasSize(1);
