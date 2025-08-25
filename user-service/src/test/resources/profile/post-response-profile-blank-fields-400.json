@@ -2,6 +2,6 @@
   "timestamp": "2024-10-08T09:43:54.025+00:00",
   "status": 400,
   "error": "Bad Request",
-  "message": "The field 'name' is required, The field 'description' is required",
+  "message": "The field 'description' is required, The field 'name' is required",
   "path": "/v1/profiles"
 }
