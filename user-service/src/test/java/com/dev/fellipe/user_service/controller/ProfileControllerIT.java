@@ -3,6 +3,7 @@ package com.dev.fellipe.user_service.controller;
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.ProfileUtils;
 import com.dev.fellipe.user_service.config.IntegrationTestBasicConfig;
+import com.dev.fellipe.user_service.config.TestRestTemplateConfig;
 import com.dev.fellipe.user_service.response.ProfileGetResponse;
 import com.dev.fellipe.user_service.response.ProfilePostResponse;
 import org.assertj.core.api.Assertions;
@@ -16,7 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestRestTemplateConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProfileControllerIT extends IntegrationTestBasicConfig {
     private static final String URL = "/v1/profiles";

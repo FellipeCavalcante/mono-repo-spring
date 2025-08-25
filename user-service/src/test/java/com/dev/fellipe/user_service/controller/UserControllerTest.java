@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
 @WebMvcTest(controllers = UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ComponentScan(basePackages = "com.dev.fellipe")
+@WithMockUser
 class UserControllerTest {
     private static final String URL = "/v1/users";
 
@@ -65,6 +67,7 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users returns a list with all users when argument is null")
     @Order(1)
+    @WithMockUser(authorities = "ADMIN")
     void findAll_ReturnsAllUsers_WhenArgumentIsNull() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(usersList);
         var response = fIleUtis.readResourceFile("user/get-user-null-name-200.json");
@@ -78,6 +81,7 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users?firstName=Fellipe returns list with found object when first name exists")
     @Order(2)
+    @WithMockUser(authorities = "ADMIN")
     void findAll_ReturnsFoundUserInList_WhenFirstNameIsFound() throws Exception {
         var response = fIleUtis.readResourceFile("user/get-user-fellipe-name-200.json");
         var firstName = "Fellipe";
@@ -94,6 +98,7 @@ class UserControllerTest {
     @Test
     @DisplayName("GET v1/users?name=x returns empty list when name is not found")
     @Order(3)
+    @WithMockUser(authorities = "ADMIN")
     void findByName_ReturnEmptyList_WhenNameIsNotFound() throws Exception {
         var response = fIleUtis.readResourceFile("user/get-user-x-name-200.json");
         var name = "x";
@@ -135,6 +140,7 @@ class UserControllerTest {
     @Test
     @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
     @Order(6)
+    @WithMockUser(authorities = "ADMIN")
     void delete_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
         var response = fIleUtis.readResourceFile("user/delete-user-by-id-404.json");
         var id = 99L;
@@ -149,6 +155,7 @@ class UserControllerTest {
     @Test
     @DisplayName("DELETE v1/users/1 removes an user")
     @Order(7)
+    @WithMockUser(authorities = "ADMIN")
     void delete_RemoveUser_WhenSuccessful() throws Exception {
         var id = usersList.getFirst().getId();
         var foundUser = usersList.stream().filter(user -> user.getId().equals(id)).findFirst();
