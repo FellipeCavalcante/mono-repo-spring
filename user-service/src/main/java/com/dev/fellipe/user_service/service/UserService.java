@@ -36,8 +36,8 @@ public class UserService {
     }
 
     public void update(User userToUpdate) {
-        assertEmailDosNotExists(userToUpdate.getEmail(), userToUpdate.getId());
         var savedUser = findById(userToUpdate.getId());
+        assertEmailDosNotExists(userToUpdate.getEmail(), userToUpdate.getId());
 
         userToUpdate.setRoles(savedUser.getRoles());
 
