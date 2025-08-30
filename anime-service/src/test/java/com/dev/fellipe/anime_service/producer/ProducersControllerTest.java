@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -29,8 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(controllers = ProducersController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"com.dev.fellipe.anime_service.producer", "com.dev.fellipe.anime_service.commons", "com.dev.fellipe.exception"})
+@ComponentScan(basePackages = {"com.dev.fellipe.anime_service.producer", "com.dev.fellipe.anime_service.commons", "com.dev.fellipe.exception", "com.dev.fellipe.anime_service.config"})
 //@ActiveProfiles("test")
+@WithMockUser
 class ProducersControllerTest {
     private static final String URL = "/v1/producers";
 
@@ -63,6 +65,16 @@ class ProducersControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
+    }@Test
+
+    @DisplayName("GET v1/producers returns 403 when role is not USER")
+    @Order(20)
+    @WithMockUser(roles = "Manager")
+    void findAll_Return403_WhenRoleIsNotUser() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test

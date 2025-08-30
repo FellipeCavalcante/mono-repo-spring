@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -31,7 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(controllers = AnimeController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"com.dev.fellipe.anime_service.anime", "com.dev.fellipe.anime_service.commons", "com.dev.fellipe.exception"})
+@ComponentScan(basePackages = {"com.dev.fellipe.anime_service.anime", "com.dev.fellipe.anime_service.commons", "com.dev.fellipe.exception", "com.dev.fellipe.anime_service.config"})
+@WithMockUser
 class AnimeControllerTest {
     private static final String URL = "/v1/animes";
 
@@ -80,6 +82,17 @@ class AnimeControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
+    @Test
+    @DisplayName("GET v1/animes returns 403 when role is not User")
+    @Order(20)
+    @WithMockUser(roles = "ADMIN")
+    void findAll_Returns403_WhenRoleIsNotUser() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
