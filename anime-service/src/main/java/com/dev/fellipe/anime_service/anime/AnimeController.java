@@ -1,10 +1,12 @@
 package com.dev.fellipe.anime_service.anime;
 
-import com.dev.fellipe.anime_service.anime.request.AnimePostRequest;
-import com.dev.fellipe.anime_service.anime.request.AnimePutRequest;
-import com.dev.fellipe.anime_service.domain.Anime;
+import dev.fellipe.api.AnimeControllerApi;
+import dev.fellipe.dto.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,7 +23,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @SecurityRequirement(name = "basicAuth")
-public class AnimeController {
+public class AnimeController implements AnimeControllerApi {
 
     private final AnimeMapper mapper;
     private final AnimeService service;
@@ -36,14 +38,16 @@ public class AnimeController {
         return ResponseEntity.ok(animeGetResponseList);
     }
 
+    @Override
     @GetMapping("/paginated")
-    public ResponseEntity<Page<AnimeGetResponse>> findAllAnimesPaginated(@ParameterObject Pageable pageable) {
+    public ResponseEntity<PageAnimeGetResponse> findAllAnimesPaginated(Pageable pageable) {
         log.debug("Request recived to list all animes, param paginated");
 
-        var animes = service.findAllPaginated(pageable).map(mapper::toAnimeGetResponse);
+        var jpaPageAnimeGetResponse = service.findAllPaginated(pageable);
+        var pageAnimeGetResponse = mapper.toPageAnimeGetResponse(jpaPageAnimeGetResponse);
 
 
-        return ResponseEntity.ok(animes);
+        return ResponseEntity.ok(pageAnimeGetResponse);
     }
 
 

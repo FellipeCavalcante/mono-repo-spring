@@ -1,12 +1,12 @@
 package com.dev.fellipe.anime_service.anime;
 
 import com.dev.fellipe.anime_service.domain.Anime;
-import com.dev.fellipe.anime_service.anime.request.AnimePostRequest;
-import com.dev.fellipe.anime_service.anime.request.AnimePutRequest;
+import dev.fellipe.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -25,4 +25,5 @@ public interface AnimeMapper {
 
     List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
 
+    PageAnimeGetResponse toPageAnimeGetResponse(Page<Anime> jpaPageAnimeGetResponse);
 }

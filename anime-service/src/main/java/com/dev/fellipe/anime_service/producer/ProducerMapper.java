@@ -2,9 +2,7 @@ package com.dev.fellipe.anime_service.producer;
 
 import com.dev.fellipe.anime_service.domain.Producer;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
