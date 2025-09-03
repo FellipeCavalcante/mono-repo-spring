@@ -80,7 +80,9 @@
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
+                                <implicitHeaders>true</implicitHeaders>
                                 <documentationProvider>springdoc</documentationProvider>
+                                <dateLibrary>true</dateLibrary>
                             </configOptions>
                         </configuration>
                     </execution>

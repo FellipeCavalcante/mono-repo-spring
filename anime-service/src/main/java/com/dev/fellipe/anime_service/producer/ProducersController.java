@@ -1,5 +1,10 @@
 package com.dev.fellipe.anime_service.producer;
 
+import dev.fellipe.api.ProducersControllerApi;
+import dev.fellipe.dto.ProducerGetResponse;
+import dev.fellipe.dto.ProducerPostRequest;
+import dev.fellipe.dto.ProducerPostResponse;
+import dev.fellipe.dto.ProducerPutRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +22,14 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @SecurityRequirement(name = "basicAuth")
-public class ProducersController {
+public class ProducersController implements ProducersControllerApi {
 
     private final ProducerMapper mapper;
     private final ProducerService service;
 
     @GetMapping()
     public ResponseEntity<List<ProducerGetResponse>> findAllProducers(@RequestParam(required = false) String name) {
-        log.debug("Request recived to list all producers, param name '{}'", name);
+        log.debug("Request received to list all producers, param name '{}'", name);
 
         var producers = service.findAll(name);
         var producerGetResponse = mapper.toProducerGetResponseList(producers);
@@ -44,8 +49,7 @@ public class ProducersController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProducerPostResponse> saveProducer(@RequestBody @Valid ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
-        log.info("Headers received: {}", headers);
+    public ResponseEntity<ProducerPostResponse> saveProducer(@RequestBody @Valid ProducerPostRequest producerPostRequest) {
 
         var producer = mapper.toProducer(producerPostRequest);
         var producerSaved = service.save(producer);
@@ -53,6 +57,7 @@ public class ProducersController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(producerPostResponse);
     }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteByProducerId(@PathVariable Long id) {
