@@ -5,8 +5,8 @@ spring:
     name: anime-service
   datasource:
     url: jdbc:mysql://localhost:3307/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: ${ENV_ROOT_USER}
-    password: ${ENV_ROOT_PASSWORD}
+    username: ${ENV_ROOT_USER:root}
+    password: ${ENV_ROOT_PASSWORD:devfellipe}
   jpa:
     show-sql: true
     hibernate:
