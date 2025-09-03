@@ -15,6 +15,9 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<anime-api-client.version>1.0-SNAPSHOT</anime-api-client.version>
+		<jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
+		<docker.repo.url>fellipecavalcante</docker.repo.url>
+		<docker.repo.project>${artifactId}</docker.repo.project>
 	</properties>
 
 	<dependencies>
@@ -65,4 +68,16 @@
 
     </dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib-maven-plugin.version}</version>
+				<configuration>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
