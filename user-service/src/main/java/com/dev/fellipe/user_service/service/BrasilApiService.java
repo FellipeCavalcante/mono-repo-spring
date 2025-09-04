@@ -1,9 +1,13 @@
 package com.dev.fellipe.user_service.service;
 
+import com.dev.fellipe.exception.NotFoundException;
 import com.dev.fellipe.user_service.config.BrasilAPiConfigurationProperties;
+import com.dev.fellipe.user_service.response.CepErrorResponse;
 import com.dev.fellipe.user_service.response.CepGetResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -15,12 +19,18 @@ public class BrasilApiService {
     private final RestClient.Builder brasilApiClient;
 
     private final BrasilAPiConfigurationProperties brasilAPiConfigurationProperties;
+    private final ObjectMapper mapper;
 
     public CepGetResponse findCep(String cep) {
         return brasilApiClient.build()
                 .get()
                 .uri(brasilAPiConfigurationProperties.cepUri(), cep)
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, ((request, response) -> {
+                    var body = new String(response.getBody().readAllBytes());
+                    var cepErrorResponse = mapper.readValue(body, CepErrorResponse.class);
+                    throw new NotFoundException(cepErrorResponse.toString());
+                }))
                 .body(CepGetResponse.class);
     }
 }
