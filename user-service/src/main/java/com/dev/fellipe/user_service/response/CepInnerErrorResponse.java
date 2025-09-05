@@ -2,13 +2,9 @@ package com.dev.fellipe.user_service.response;
 
 import lombok.Builder;
 
-import java.util.List;
-
 @Builder
-public record CepErrorResponse(
+public record CepInnerErrorResponse(
         String name,
         String message,
-        String type,
-        List<CepInnerErrorResponse> errors
-) {
-}
+        String service
+) {}
