@@ -1,5 +1,8 @@
 package com.dev.fellipe.user_service.response;
 
+import lombok.Builder;
+
+@Builder
 public record CepGetResponse(
         String cep,
         String state,
