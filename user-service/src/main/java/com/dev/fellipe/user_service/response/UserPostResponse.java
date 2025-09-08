@@ -8,8 +8,9 @@ import lombok.Setter;
 @Getter
 @Builder
 public class UserPostResponse {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
+
+  private Long id;
+  private String firstName;
+  private String lastName;
+  private String email;
 }

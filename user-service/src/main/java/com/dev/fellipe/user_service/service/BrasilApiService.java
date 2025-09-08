@@ -15,22 +15,32 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 public class BrasilApiService {
 
-    @Qualifier("brasilApiClient")
-    private final RestClient.Builder brasilApiClient;
+  @Qualifier("brasilApiClient")
+  private final RestClient.Builder brasilApiClient;
 
-    private final BrasilAPiConfigurationProperties brasilAPiConfigurationProperties;
-    private final ObjectMapper mapper;
+  private final BrasilAPiConfigurationProperties brasilAPiConfigurationProperties;
+  private final ObjectMapper mapper;
 
-    public CepGetResponse findCep(String cep) {
-        return brasilApiClient.build()
-                .get()
-                .uri(brasilAPiConfigurationProperties.cepUri(), cep)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, ((request, response) -> {
-                    var body = new String(response.getBody().readAllBytes());
-                    var cepErrorResponse = mapper.readValue(body, CepErrorResponse.class);
-                    throw new NotFoundException(cepErrorResponse.toString());
-                }))
-                .body(CepGetResponse.class);
-    }
+  public CepGetResponse findCep(
+      String cep) {
+    return brasilApiClient.build()
+        .get()
+        .uri(
+            brasilAPiConfigurationProperties.cepUri(),
+            cep)
+        .retrieve()
+        .onStatus(
+            HttpStatusCode::is4xxClientError,
+            ((request, response) -> {
+              var body = new String(
+                  response.getBody()
+                      .readAllBytes());
+              var cepErrorResponse = mapper.readValue(
+                  body,
+                  CepErrorResponse.class);
+              throw new NotFoundException(
+                  cepErrorResponse.toString());
+            }))
+        .body(CepGetResponse.class);
+  }
 }

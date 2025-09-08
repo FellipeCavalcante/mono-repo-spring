@@ -4,7 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "brasil-api")
 public record BrasilAPiConfigurationProperties(
-        String baseUrl,
-        String cepUri
+    String baseUrl,
+    String cepUri
 ) {
+
 }

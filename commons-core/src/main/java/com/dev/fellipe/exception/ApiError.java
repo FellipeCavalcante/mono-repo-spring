@@ -1,6 +1,10 @@
 package com.dev.fellipe.exception;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -8,9 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiError {
-    private String timestamp;
-    private int status;
-    private String error;
-    private String message;
-    private String path;
+
+  private String timestamp;
+  private int status;
+  private String error;
+  private String message;
+  private String path;
 }

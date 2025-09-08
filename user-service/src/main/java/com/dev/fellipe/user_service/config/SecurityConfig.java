@@ -17,35 +17,53 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST = {"/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/csrf"};
+  private static final String[] WHITE_LIST = {
+      "/swagger-ui.html",
+      "/v3/api-docs/**",
+      "/swagger-ui/**", "/csrf"};
 
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-//        var user = User.withUsername("takamura")
-//                .password(passwordEncoder.encode("ippo"))
-//                .roles("USER")
-//                .build();
-//
-//        var admin = User.withUsername("admin")
-//                .password(passwordEncoder.encode("devfellipe"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
+  //  @Bean
+  //  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+  //      var user = User.withUsername("takamura")
+  //              .password(passwordEncoder.encode("ippo"))
+  //              .roles("USER")
+  //              .build();
+  //
+  //      var admin = User.withUsername("admin")
+  //              .password(passwordEncoder.encode("devfellipe"))
+  //              .roles("ADMIN")
+  //              .build();
+  //
+  //      return new InMemoryUserDetailsManager(user, admin);
+  //  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-//                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(HttpMethod.POST, "v1/users").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "v1/users/*").hasAnyAuthority("ADMIN")
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .build();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http)
+      throws Exception {
+    return http
+        .csrf(
+            AbstractHttpConfigurer::disable)
+        //          .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        //                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+        .authorizeHttpRequests(
+            auth -> auth
+                .requestMatchers(
+                    WHITE_LIST)
+                .permitAll()
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "v1/users")
+                .permitAll()
+                .requestMatchers(
+                    HttpMethod.DELETE,
+                    "v1/users/*")
+                .hasAnyAuthority(
+                    "ADMIN")
+                .anyRequest()
+                .authenticated())
+        .httpBasic(
+            Customizer.withDefaults())
+        .build();
+  }
 }

@@ -8,10 +8,12 @@ import org.springframework.web.client.RestClient;
 @Configuration
 @RequiredArgsConstructor
 public class RestClientConfiguration {
-    private final BrasilAPiConfigurationProperties brasilAPiConfigurationProperties;
 
-    @Bean(name = "brasilApiClient")
-    public RestClient.Builder brasilApiClient() {
-        return RestClient.builder().baseUrl(brasilAPiConfigurationProperties.baseUrl());
-    }
+  private final BrasilAPiConfigurationProperties brasilAPiConfigurationProperties;
+
+  @Bean(name = "brasilApiClient")
+  public RestClient.Builder brasilApiClient() {
+    return RestClient.builder().baseUrl(
+        brasilAPiConfigurationProperties.baseUrl());
+  }
 }

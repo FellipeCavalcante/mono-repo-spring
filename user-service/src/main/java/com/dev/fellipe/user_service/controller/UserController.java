@@ -16,15 +16,23 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("v1/users")
@@ -34,91 +42,116 @@ import java.util.List;
 @SecurityRequirement(name = "basicAuth")
 public class UserController {
 
-    private final UserMapper mapper;
-    private final UserService service;
+  private final UserMapper mapper;
+  private final UserService service;
 
 
-    @GetMapping
-    @Operation(summary = "Get all users", description = "Get all users available in the system",
-            responses = {
-                    @ApiResponse(description = "List all users",
-                            responseCode = "200",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = UserGetResponse.class)))
-                    ),
-            })
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<UserGetResponse>> findAll(@RequestParam(required = false) String firstName) {
-        log.debug("Request received to list all users, param first name '{}'", firstName);
+  @GetMapping
+  @Operation(summary = "Get all users", description = "Get all users available in the system",
+      responses = {
+          @ApiResponse(description = "List all users",
+              responseCode = "200",
+              content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                  array = @ArraySchema(schema = @Schema(implementation = UserGetResponse.class)))
+          ),
+      })
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<List<UserGetResponse>> findAll(
+      @RequestParam(required = false) String firstName) {
+    log.debug(
+        "Request received to list all users, param first name '{}'",
+        firstName);
 
-        var users = service.findAll(firstName);
+    var users = service.findAll(
+        firstName);
 
-        var userGetResponses = mapper.toUserGetResponseList(users);
+    var userGetResponses = mapper.toUserGetResponseList(
+        users);
 
-        return ResponseEntity.ok(userGetResponses);
-    }
+    return ResponseEntity.ok(
+        userGetResponses);
+  }
 
-    @GetMapping("{id}")
-    @Operation(summary = "Get user by id",
-            responses = {
-                    @ApiResponse(description = "Get user by its id",
-                            responseCode = "200",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserGetResponse.class))
-                    ),
-                    @ApiResponse(description = "User not found",
-                            responseCode = "404",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = DefaultErrorMessage.class))
-                    ),
-            })
-    public ResponseEntity<UserGetResponse> getUser(@PathVariable Long id) {
-        log.debug("Request to find user by id: {}", id);
+  @GetMapping("{id}")
+  @Operation(summary = "Get user by id",
+      responses = {
+          @ApiResponse(description = "Get user by its id",
+              responseCode = "200",
+              content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserGetResponse.class))
+          ),
+          @ApiResponse(description = "User not found",
+              responseCode = "404",
+              content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = DefaultErrorMessage.class))
+          ),
+      })
+  public ResponseEntity<UserGetResponse> getUser(
+      @PathVariable Long id) {
+    log.debug(
+        "Request to find user by id: {}",
+        id);
 
-        var user = service.findById(id);
-        var userGetResponse = mapper.toUserGetResponse(user);
+    var user = service.findById(id);
+    var userGetResponse = mapper.toUserGetResponse(
+        user);
 
-        return ResponseEntity.ok(userGetResponse);
-    }
+    return ResponseEntity.ok(
+        userGetResponse);
+  }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create user",
-            responses = {
-                    @ApiResponse(description = "Save user in the database",
-                            responseCode = "201",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserPostResponse.class))
-                    ),
-                    @ApiResponse(description = "Bad Request",
-                            responseCode = "400",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiError.class))
-                    ),
-            })
-    public ResponseEntity<UserPostResponse> create(@RequestBody @Valid UserPostRequest request) {
-        log.debug("Request to create user: {}", request);
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  @Operation(summary = "Create user",
+      responses = {
+          @ApiResponse(description = "Save user in the database",
+              responseCode = "201",
+              content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserPostResponse.class))
+          ),
+          @ApiResponse(description = "Bad Request",
+              responseCode = "400",
+              content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiError.class))
+          ),
+      })
+  public ResponseEntity<UserPostResponse> create(
+      @RequestBody @Valid UserPostRequest request) {
+    log.debug(
+        "Request to create user: {}",
+        request);
 
-        var user = mapper.toUser(request);
+    var user = mapper.toUser(request);
 
-        var userSaved = service.save(user);
+    var userSaved = service.save(user);
 
-        var userPostResponse = mapper.toUserPostResponse(userSaved);
+    var userPostResponse = mapper.toUserPostResponse(
+        userSaved);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userPostResponse);
-    }
+    return ResponseEntity.status(
+            HttpStatus.CREATED)
+        .body(userPostResponse);
+  }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        log.debug("Request to delete user by id: {}", id);
+  @DeleteMapping("{id}")
+  public ResponseEntity<Void> deleteById(
+      @PathVariable Long id) {
+    log.debug(
+        "Request to delete user by id: {}",
+        id);
 
-        service.delete(id);
+    service.delete(id);
 
-        return ResponseEntity.noContent().build();
-    }
+    return ResponseEntity.noContent()
+        .build();
+  }
 
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest request) {
-        var userToUpdate = mapper.toUser(request);
-        service.update(userToUpdate);
+  @PutMapping
+  public ResponseEntity<Void> update(
+      @RequestBody @Valid UserPutRequest request) {
+    var userToUpdate = mapper.toUser(
+        request);
+    service.update(userToUpdate);
 
-        return ResponseEntity.noContent().build();
-    }
+    return ResponseEntity.noContent()
+        .build();
+  }
 
 }
 
