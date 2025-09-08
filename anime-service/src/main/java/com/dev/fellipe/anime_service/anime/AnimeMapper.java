@@ -1,29 +1,40 @@
 package com.dev.fellipe.anime_service.anime;
 
 import com.dev.fellipe.anime_service.domain.Anime;
-import dev.fellipe.dto.*;
+import dev.fellipe.dto.AnimeGetResponse;
+import dev.fellipe.dto.AnimePostRequest;
+import dev.fellipe.dto.AnimePostResponse;
+import dev.fellipe.dto.AnimePutRequest;
+import dev.fellipe.dto.PageAnimeGetResponse;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AnimeMapper {
-    AnimeMapper INSTACE = Mappers.getMapper(AnimeMapper.class);
 
-    @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
-    Anime toAnime(AnimePostRequest postRequest);
+  AnimeMapper INSTACE = Mappers.getMapper(
+      AnimeMapper.class);
 
-    Anime toAnime(AnimePutRequest request);
+  @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(100_000))")
+  Anime toAnime(
+      AnimePostRequest postRequest);
 
-    AnimePostResponse toAnimePostResponse(Anime anime);
+  Anime toAnime(
+      AnimePutRequest request);
 
-    AnimeGetResponse toAnimeGetResponse(Anime anime);
+  AnimePostResponse toAnimePostResponse(
+      Anime anime);
 
-    List<AnimeGetResponse> toAnimeGetResponseList(List<Anime> animes);
+  AnimeGetResponse toAnimeGetResponse(
+      Anime anime);
 
-    PageAnimeGetResponse toPageAnimeGetResponse(Page<Anime> jpaPageAnimeGetResponse);
+  List<AnimeGetResponse> toAnimeGetResponseList(
+      List<Anime> animes);
+
+  PageAnimeGetResponse toPageAnimeGetResponse(
+      Page<Anime> jpaPageAnimeGetResponse);
 }

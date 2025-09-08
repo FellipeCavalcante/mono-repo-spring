@@ -21,29 +21,50 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST = {"/swagger-ui.html", "/v3/**", "/swagger-ui/**", "/csrf"};
+  private static final String[] WHITE_LIST = {
+      "/swagger-ui.html", "/v3/**",
+      "/swagger-ui/**", "/csrf"};
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        var user = User.withUsername("takamura")
-                .password(passwordEncoder.encode("ippo"))
-                .roles("USER")
-                .build();
+  @Bean
+  public UserDetailsService userDetailsService(
+      PasswordEncoder passwordEncoder) {
+    var user = User.withUsername(
+            "takamura")
+        .password(
+            passwordEncoder.encode(
+                "ippo"))
+        .roles("USER")
+        .build();
 
-        return new InMemoryUserDetailsManager(user);
-    }
+    return new InMemoryUserDetailsManager(
+        user);
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers("v1/animes/**").hasRole("USER")
-                        .requestMatchers("v1/producers/**").hasRole("USER")
-                        .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .build();
-    }
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http)
+      throws Exception {
+    return http
+        .csrf(
+            AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            auth -> auth
+                .requestMatchers(
+                    WHITE_LIST)
+                .permitAll()
+                .requestMatchers(
+                    "v1/animes/**")
+                .hasRole("USER")
+                .requestMatchers(
+                    "v1/producers/**")
+                .hasRole("USER")
+                .requestMatchers(
+                    EndpointRequest.toAnyEndpoint())
+                .permitAll()
+                .anyRequest()
+                .authenticated())
+        .httpBasic(
+            Customizer.withDefaults())
+        .build();
+  }
 }

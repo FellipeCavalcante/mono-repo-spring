@@ -2,39 +2,52 @@ package com.dev.fellipe.anime_service.producer;
 
 import com.dev.fellipe.anime_service.domain.Producer;
 import com.dev.fellipe.exception.NotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProducerService {
-    private final ProducerRepository repository;
 
-    public List<Producer> findAll(String name) {
-        return name == null ? repository.findAll() : repository.findByName(name);
-    }
+  private final ProducerRepository repository;
 
-    public Producer findByIdOrThrowNotFound(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Producer not found"));
-    }
+  public List<Producer> findAll(
+      String name) {
+    return name == null
+        ? repository.findAll()
+        : repository.findByName(name);
+  }
 
-    public Producer save(Producer producer) {
-        return repository.save(producer);
-    }
+  public Producer findByIdOrThrowNotFound(
+      Long id) {
+    return repository.findById(id)
+        .orElseThrow(
+            () -> new NotFoundException(
+                "Producer not found"));
+  }
 
-    public void delete(Long id) {
-        var producer = findByIdOrThrowNotFound(id);
-        repository.delete(producer);
-    }
+  public Producer save(
+      Producer producer) {
+    return repository.save(producer);
+  }
 
-    public void update(Producer producerToUpdate) {
-        assertProducerExists(producerToUpdate.getId());
+  public void delete(Long id) {
+    var producer = findByIdOrThrowNotFound(
+        id);
+    repository.delete(producer);
+  }
 
-        repository.save(producerToUpdate);
-    }
+  public void update(
+      Producer producerToUpdate) {
+    assertProducerExists(
+        producerToUpdate.getId());
 
-    public void assertProducerExists(Long id) { findByIdOrThrowNotFound(id); }
+    repository.save(producerToUpdate);
+  }
+
+  public void assertProducerExists(
+      Long id) {
+    findByIdOrThrowNotFound(id);
+  }
 }
