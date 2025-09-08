@@ -1,0 +1,10 @@
+INSERT INTO user_service.user (id, email, first_name, last_name, password, roles) VALUES (1, 'fellipe@azevedo.com', 'Fellipe', 'Cavalcante', '{bcrypt}$2a$10$Sh.n.nxxaYOl80Hgjl1uIeletpslQ282W6xzHdMN5SZvNB5UYXxyu', 'USER');
+INSERT INTO user_service.user (id, email, first_name, last_name, password, roles) VALUES (2, 'naruto@konoha.com', 'Naruto', 'Uzumaki', '{bcrypt}$2a$10$m2YFdoKgzJpY4aqS0MYWZOb0itu4Jf3LdafSIrhC37yUjYyg9bXL2', 'USER');
+INSERT INTO user_service.user (id, email, first_name, last_name, password, roles) VALUES (3, 'itachi@konoha.com', 'Itachi', 'Uchiha', '{bcrypt}$2a$10$m2YFdoKgzJpY4aqS0MYWZOb0itu4Jf3LdafSIrhC37yUjYyg9bXL2', 'USER');
+INSERT INTO user_service.user (id, email, first_name, last_name, password, roles) VALUES (4, 'gojou.satoru@jujutsu.com', 'Gojou', 'Satoru', '', 'USER');
+INSERT INTO user_service.user (id, email, first_name, last_name, password, roles) VALUES (6, 'fellipe@konoha.com', 'Fellipe', 'Azevedo', '{bcrypt}$2a$10$m2YFdoKgzJpY4aqS0MYWZOb0itu4Jf3LdafSIrhC37yUjYyg9bXL2', 'ADMIN');
+INSERT INTO user_service.profile (id, description, name) VALUES (1, 'User admin profile', 'admin');
+INSERT INTO user_service.profile (id, description, name) VALUES (2, 'Regular user', 'regular');
+INSERT INTO user_service.user_profile (id, profile_id, user_id) VALUES (1, 1, 1);
+INSERT INTO user_service.user_profile (id, profile_id, user_id) VALUES (2, 2, 2);
+INSERT INTO user_service.user_profile (id, profile_id, user_id) VALUES (4, 2, 3);
