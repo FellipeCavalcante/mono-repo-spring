@@ -2,6 +2,7 @@ package com.dev.fellipe.user_service.controller;
 
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.UserUtils;
+import com.dev.fellipe.user_service.config.BrasilAPiConfigurationProperties;
 import com.dev.fellipe.user_service.domain.User;
 import com.dev.fellipe.user_service.repository.ProfileRepository;
 import com.dev.fellipe.user_service.repository.UserProfileRepository;
@@ -15,11 +16,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -33,6 +36,7 @@ import java.util.stream.Stream;
 @WebMvcTest(controllers = UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ComponentScan(basePackages = "com.dev.fellipe")
+@EnableConfigurationProperties(value = BrasilAPiConfigurationProperties.class)
 @WithMockUser
 class UserControllerTest {
     private static final String URL = "/v1/users";
@@ -40,17 +44,17 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ProfileRepository profileRepository;
 
-    @MockBean
+    @MockitoBean
     private ProfileService profileService;
 
-    @MockBean
+    @MockitoBean
     private UserRepository repository;
     private List<User> usersList;
 
-    @MockBean
+    @MockitoBean
     private UserProfileRepository userProfileRepository;
 
     @Autowired

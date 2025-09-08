@@ -2,6 +2,7 @@ package com.dev.fellipe.user_service.controller;
 
 import com.dev.fellipe.user_service.commons.FIleUtis;
 import com.dev.fellipe.user_service.commons.ProfileUtils;
+import com.dev.fellipe.user_service.config.BrasilAPiConfigurationProperties;
 import com.dev.fellipe.user_service.domain.Profile;
 import com.dev.fellipe.user_service.repository.ProfileRepository;
 import com.dev.fellipe.user_service.repository.UserProfileRepository;
@@ -14,11 +15,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -31,6 +34,7 @@ import java.util.stream.Stream;
 @WebMvcTest(controllers = ProfileController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ComponentScan(basePackages = "com.dev.fellipe")
+@EnableConfigurationProperties(value = BrasilAPiConfigurationProperties.class)
 @WithMockUser
 class ProfileControllerTest {
     private static final String URL = "/v1/profiles";
@@ -38,15 +42,15 @@ class ProfileControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ProfileRepository repository;
 
-    @MockBean
+    @MockitoBean
     private UserRepository userRepository;
 
     private List<Profile> profilesList;
 
-    @MockBean
+    @MockitoBean
     private UserProfileRepository userProfileRepository;
 
     @Autowired
